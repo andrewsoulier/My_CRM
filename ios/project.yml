@@ -1,0 +1,106 @@
+name: MyCRM
+options:
+  bundleIdPrefix: com.mycrm
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    TARGETED_DEVICE_FAMILY: "1"
+targets:
+  MyCRMShared:
+    type: framework
+    platform: iOS
+    sources:
+      - MyCRMShared/Sources/MyCRMShared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.mycrm.shared
+        GENERATE_INFOPLIST_FILE: YES
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: "0.1.0"
+    info:
+      path: MyCRMShared/Info.plist
+      properties:
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+
+  MyCRM:
+    type: application
+    platform: iOS
+    sources:
+      - MyCRM
+    dependencies:
+      - target: MyCRMShared
+      - target: MyCRMKeyboard
+        embed: true
+      - target: MyCRMMessages
+        embed: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.mycrm.app
+        GENERATE_INFOPLIST_FILE: NO
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: "0.1.0"
+        CODE_SIGN_ENTITLEMENTS: MyCRM/MyCRM.entitlements
+        INFOPLIST_FILE: MyCRM/Info.plist
+    entitlements:
+      path: MyCRM/MyCRM.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.mycrm.shared
+
+  MyCRMKeyboard:
+    type: app-extension
+    platform: iOS
+    sources:
+      - MyCRMKeyboard
+    dependencies:
+      - target: MyCRMShared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.mycrm.app.keyboard
+        GENERATE_INFOPLIST_FILE: NO
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: "0.1.0"
+        CODE_SIGN_ENTITLEMENTS: MyCRMKeyboard/MyCRMKeyboard.entitlements
+        INFOPLIST_FILE: MyCRMKeyboard/Info.plist
+        SKIP_INSTALL: YES
+    entitlements:
+      path: MyCRMKeyboard/MyCRMKeyboard.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.mycrm.shared
+
+  MyCRMMessages:
+    type: app-extension
+    platform: iOS
+    sources:
+      - MyCRMMessages
+    dependencies:
+      - target: MyCRMShared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.mycrm.app.messages
+        GENERATE_INFOPLIST_FILE: NO
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: "0.1.0"
+        CODE_SIGN_ENTITLEMENTS: MyCRMMessages/MyCRMMessages.entitlements
+        INFOPLIST_FILE: MyCRMMessages/Info.plist
+        SKIP_INSTALL: YES
+    entitlements:
+      path: MyCRMMessages/MyCRMMessages.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.mycrm.shared
+schemes:
+  MyCRM:
+    build:
+      targets:
+        MyCRM: all
+        MyCRMShared: all
+        MyCRMKeyboard: all
+        MyCRMMessages: all
+    run:
+      config: Debug

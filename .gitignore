@@ -1,0 +1,12 @@
+settings.json
+data/
+*.sqlite3
+.DS_Store
+ios/*.xcodeproj
+ios/*.xcworkspace
+ios/Pods/
+DerivedData/
+.swiftpm/
+__pycache__/
+*.pyc
+.venv/
