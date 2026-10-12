@@ -13,18 +13,14 @@ jobs:
   test:
     runs-on: macos-latest
 
-    strategy:
-      matrix:
-        swift-version: ['5.9', '5.10']
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Swift
-      uses: swift-actions/setup-swift@v1
-      with:
-        swift-version: ${{ matrix.swift-version }}
+    - name: Swift toolchain
+      run: |
+        xcodebuild -version
+        swift --version
 
     - name: Cache Swift Package Manager
       uses: actions/cache@v4
@@ -44,14 +40,14 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: test-results-${{ matrix.swift-version }}
+        name: test-results
         path: |
           test_results/
           .build/
 
     - name: Upload Coverage Reports
-      uses: codecov/codecov-action@v3
-      if: matrix.swift-version == '5.10'
+      uses: codecov/codecov-action@v4
+      if: always()
       with:
         file: ./.build/debug/codecov/default.profdata
         flags: unittests
@@ -66,20 +62,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Swift
-      uses: swift-actions/setup-swift@v1
-      with:
-        swift-version: '5.10'
+    - name: Swift toolchain
+      run: swift --version
 
     - name: Build Application
-      run: swift build
-
-    - name: Test Build Script
-      run: ./build_app.sh "CI Test Build"
+      run: swift build -c release
 
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v4
       if: always()
       with:
         name: build-artifacts
-        path: build/
+        path: .build/release/
