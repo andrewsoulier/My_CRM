@@ -27,7 +27,7 @@ jobs:
         swift-version: ${{ matrix.swift-version }}
 
     - name: Cache Swift Package Manager
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: .build
         key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
@@ -41,7 +41,7 @@ jobs:
       run: ./Tests/run_tests.sh all
 
     - name: Upload Test Results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-results-${{ matrix.swift-version }}
@@ -78,7 +78,7 @@ jobs:
       run: ./build_app.sh "CI Test Build"
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: build-artifacts
