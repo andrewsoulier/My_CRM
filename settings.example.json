@@ -1,0 +1,18 @@
+{
+  "database": {
+    "path": "./data/crm.sqlite3"
+  },
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8787,
+    "api_token": "change-me-to-a-long-random-secret"
+  },
+  "location": {
+    "max_skew_seconds": 600
+  },
+  "import": {
+    "contacts_csv": null,
+    "messages_jsonl": null,
+    "watch_messages_db": null
+  }
+}
