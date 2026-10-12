@@ -1,0 +1,48 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Swift / SPM
+.build/
+.swiftpm/xcode/package.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+DerivedData/
+
+# Xcode build products
+build/
+drop_test_build/
+*.dSYM.zip
+*.dSYM
+
+# Installers & binaries
+*.dmg
+*.app
+
+# Databases & local runtime data
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Logs & caches
+*.log
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Editor
+.cursor/
+.vscode/
+
+# Scratch / reference (not part of shipped app)
+Temp Files for Reference (to Delete)/
+
+# Backup trees
+*.xcodeproj.backup/
+Package.swift.backup
+
+# Accidental copies of App Support paths in the tree
+~/

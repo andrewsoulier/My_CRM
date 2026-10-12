@@ -1,0 +1,785 @@
+# My CRM Application - Complete File Map
+# Generated on: $(date)
+# This document provides a comprehensive overview of all files in the My CRM application
+# including descriptions and cross-references between files.
+
+## ROOT DIRECTORY FILES
+
+### build_app.sh
+**Description:** Shell script for building the macOS application bundle. Handles compilation, resource bundling, app packaging, DMG creation, and automated distribution. Automatically creates timestamped DMG copies in Google Drive while cleaning up old versions.
+**Cross-references:**
+- References: My CRM.xcodeproj, Package.swift, create_dmg_simple.sh
+- Referenced by: Build process documentation, Documentation/Build/BUILD_AND_DISTRIBUTE.md
+**Distribution:** Creates DMG in 3 locations: build directory, project root (standard naming), and Google Drive (timestamped with automatic cleanup)
+
+### Package.swift
+**Description:** Swift Package Manager configuration file defining project dependencies, targets, and build settings for the CRM application.
+**Cross-references:**
+- References: Core/, UI/, Tests/ directories
+- Referenced by: build_app.sh, Xcode project
+
+### README.md
+**Description:** Main project documentation explaining the CRM application's purpose, features, and setup instructions.
+**Cross-references:**
+- References: All major feature documentation files
+- Referenced by: Project overview and onboarding
+
+### Documentation/
+**Description:** Organized documentation hub containing architecture overviews, build guides, database references, feature deep-dives, operational procedures, testing plans, and user-facing instructions.
+**Cross-references:**
+- References: Documentation/Architecture/, Documentation/Build/, Documentation/Database/, Documentation/Development/, Documentation/Features/, Documentation/Meta/, Documentation/Notes/, Documentation/Operations/, Documentation/Requirements/, Documentation/Testing/, Documentation/User/
+- Referenced by: README.md, onboarding materials, developer workflow
+
+#### Documentation/README.md
+**Description:** Single source index describing every documentation subfolder and placement rules. Update this file whenever a guide is added, moved, or renamed.
+**Cross-references:**
+- References: All Documentation subfolders
+- Referenced by: README.md, CURSOR_AI_RULES.md, developer onboarding
+
+### Documentation/Requirements/FeatureRequirements.txt
+**Description:** Detailed specification document outlining all planned features, user stories, and technical requirements for the CRM system.
+**Cross-references:**
+- References: All feature implementation files
+- Referenced by: Development planning and feature tracking
+
+### Documentation/Database/database_requirements.json
+**Description:** JSON configuration file defining database schema requirements, table structures, and data relationships for the CRM system.
+**Cross-references:**
+- References: Core/Services/SQLiteDataProvider.swift, App/Feature Groups/iMessage Server Scraper/Resources/database_utils.py
+- Referenced by: Database initialization and migration scripts
+
+### Documentation/Meta/filestructure.json
+**Description:** JSON representation of the project's file structure used for documentation and development tooling.
+**Cross-references:**
+- References: Entire project structure
+- Referenced by: Documentation generators, IDE plugins
+
+## APP DIRECTORY
+
+### App/MyCRMApp.swift
+**Description:** Main application entry point and AppModel class managing backend connectivity, data synchronization, and application lifecycle. Handles Python script execution and iMessage data processing.
+**Cross-references:**
+- References: Core/Services/ScriptPathResolver.swift, State/AppState.swift, UI/Shell/MainCRMView.swift
+- Referenced by: Application launch, menu bar integration
+
+### App/CRMApp.swift
+**Description:** Alternative application entry point and basic app structure definition.
+**Cross-references:**
+- References: Basic SwiftUI app structure
+- Referenced by: Development testing
+
+### App/-- Old -- PreferencesView.swift
+**Description:** DEPRECATED - Legacy user preferences interface. Replaced by UI/Modals/SettingsView.swift which uses SettingsManager.
+**Cross-references:**
+- References: Deprecated User_Preferences file
+- Referenced by: None (deprecated)
+
+### App/Info.plist
+**Description:** Application metadata and configuration file defining app permissions, capabilities, and system integration settings.
+**Cross-references:**
+- References: App bundle configuration
+- Referenced by: macOS system integration
+
+## CORE DIRECTORY
+
+### Core/Models/Contact.swift
+**Description:** Swift data model representing contact information with drag-and-drop support and UniformTypeIdentifiers integration for system-wide contact sharing.
+**Cross-references:**
+- References: Core/DragDrop/ContactTransferable.swift, Core/Services/SQLiteDataProvider.swift
+- Referenced by: UI/Components/ContactNodeView.swift, Core/Services/DragDropManager.swift
+
+### Core/Models/CanvasModels.swift
+**Description:** Data models for canvas-based visual organization including Canvas, CanvasElement, and related structures for contact visualization.
+**Cross-references:**
+- References: Core/Models/Contact.swift, Core/Models/Group.swift
+- Referenced by: UI/Pages/PeopleMaps/GroupsMapCanvas.swift, Core/Services/CanvasRepository.swift
+
+### Core/Models/CanvasTypes.swift
+**Description:** Type definitions and enums for canvas functionality including element types, positioning, and visual properties.
+**Cross-references:**
+- References: Core/Models/CanvasModels.swift
+- Referenced by: Canvas-related UI components and services
+
+### Core/Models/Deck.swift
+**Description:** Data model for deck-based contact organization and presentation functionality.
+**Cross-references:**
+- References: Core/Models/Contact.swift
+- Referenced by: UI/Pages/DeckBuilder/DeckBuilderView.swift
+
+### Core/Models/Group.swift
+**Description:** Data model for contact grouping functionality with hierarchical organization support.
+**Cross-references:**
+- References: Core/Models/Contact.swift
+- Referenced by: UI/Components/GroupCircleView.swift, Core/Services/CanvasRepository.swift
+
+### Core/Models/UserSettings.swift
+**Description:** Unified settings system with SettingsManager singleton for managing app configuration with auto-save, validation, and repair functionality.
+**Cross-references:**
+- References: Core/Services/SettingsMigration.swift, State/AppState.swift
+- Referenced by: UI/Modals/SettingsView.swift, Settings/AppSettingsView.swift, All Python scripts via User_Settings.json
+
+### Core/Protocols/DataProvider.swift
+**Description:** Protocol definition for data access layer abstraction, enabling different data sources and storage backends.
+**Cross-references:**
+- References: Core/Services/SQLiteDataProvider.swift
+- Referenced by: All data-consuming components
+
+### Core/Services/SQLiteDataProvider.swift
+**Description:** SQLite database implementation of DataProvider protocol, handling contact storage, retrieval, and database operations with schema management.
+**Cross-references:**
+- References: Core/Protocols/DataProvider.swift, Core/Models/Contact.swift, App/Feature Groups/iMessage Server Scraper/Resources/database_utils.py
+- Referenced by: UI components, Core/Services/CanvasRepository.swift
+
+### Core/Services/FirstRunSetup.swift
+**Description:** First-run initialization service that ensures app directory structure, settings files, and database are properly set up on launch.
+**Cross-references:**
+- References: Core/Models/UserSettings.swift, Core/Services/SettingsMigration.swift, Core/Database/CRMDatabase.swift
+- Referenced by: Core/Services/StartOrchestrator.swift
+
+### Core/Services/SettingsMigration.swift
+**Description:** One-time migration utility that transfers settings from legacy User_Preferences to User_Settings.json with automatic backup.
+**Cross-references:**
+- References: Core/Models/UserSettings.swift (SettingsManager)
+- Referenced by: Core/Services/FirstRunSetup.swift
+
+### Core/Services/ScriptPathResolver.swift
+**Description:** Utility service for resolving Python script paths in both development and production environments, handling bundle resource location and environment setup.
+**Cross-references:**
+- References: App/Feature Groups/iMessage Server Scraper/Resources/ directory
+- Referenced by: App/MyCRMApp.swift, Python script execution
+
+### Core/Services/DragDropManager.swift
+**Description:** Manages drag-and-drop operations for contacts across the application, handling data transfer and visual feedback during drag operations.
+**Cross-references:**
+- References: Core/DragDrop/ContactTransferable.swift, Core/Models/Contact.swift
+- Referenced by: UI/Components/ContactNodeView.swift, UI/Pages/PeopleMaps/GroupsMapCanvas.swift
+
+### Core/Services/FuzzyMatcher.swift
+**Description:** Fuzzy string matching algorithm implementation for contact search and name matching with configurable similarity thresholds.
+**Cross-references:**
+- References: Core/Models/Contact.swift
+- Referenced by: Tests/FuzzyMatcherTests.swift, search functionality
+
+### Core/Services/GlobalCanvasService.swift
+**Description:** Global service managing canvas state and operations across the application, providing centralized canvas management and coordination.
+**Cross-references:**
+- References: Core/Models/CanvasModels.swift, Core/Services/CanvasRepository.swift
+- Referenced by: Canvas-related UI components
+
+### Core/Services/HotkeyManager.swift
+**Description:** Global hotkey management service for application-wide keyboard shortcuts and system integration.
+**Cross-references:**
+- References: AppKit integration
+- Referenced by: Application-wide hotkey handling
+
+### Core/Services/SelectionManager.swift
+**Description:** Manages selection state across the application, handling multi-select operations and selection persistence.
+**Cross-references:**
+- References: Core/Models/Contact.swift
+- Referenced by: UI components requiring selection functionality
+
+### Core/Services/CanvasIntegrationService.swift
+**Description:** Service for integrating canvas functionality with other application features, providing canvas-aware operations and data flow.
+**Cross-references:**
+- References: Core/Services/CanvasRepository.swift, Core/Models/CanvasModels.swift
+- Referenced by: Canvas-related UI components
+
+### Core/Services/CanvasRepository.swift
+**Description:** Data access layer for canvas operations, handling canvas persistence, retrieval, and modification operations.
+**Cross-references:**
+- References: Core/Models/CanvasModels.swift, Core/Services/SQLiteDataProvider.swift
+- Referenced by: Core/Services/CanvasIntegrationService.swift, UI/Pages/PeopleMaps/GroupsMapViewModel.swift
+
+### Core/Services/KeychainManager.swift
+**Description:** Secure storage manager for API keys and sensitive credentials using macOS Keychain Services. Provides encrypted storage with service identifier isolation.
+**Cross-references:**
+- References: macOS Security framework
+- Referenced by: Core/Services/AIService/AIServiceManager.swift
+
+### Core/Services/AIService/AIProvider.swift
+**Description:** Protocol defining the common interface for all AI provider implementations. Includes ChatMessage model and AIProviderError enum for standardized error handling.
+**Cross-references:**
+- References: Core/Models/UserSettings.swift (AIProviderType)
+- Referenced by: All AI provider implementations, Core/Services/AIService/AIServiceManager.swift
+
+### Core/Services/AIService/OpenAIProvider.swift
+**Description:** OpenAI (ChatGPT) API provider implementation supporting GPT-4 and GPT-3.5 models with Bearer token authentication.
+**Cross-references:**
+- References: Core/Services/AIService/AIProvider.swift, Core/Services/KeychainManager.swift
+- Referenced by: Core/Services/AIService/AIServiceManager.swift
+
+### Core/Services/AIService/GeminiProvider.swift
+**Description:** Google Gemini API provider implementation supporting Gemini Pro and Flash models with API key authentication.
+**Cross-references:**
+- References: Core/Services/AIService/AIProvider.swift, Core/Services/KeychainManager.swift
+- Referenced by: Core/Services/AIService/AIServiceManager.swift
+
+### Core/Services/AIService/ClaudeProvider.swift
+**Description:** Anthropic Claude API provider implementation supporting Claude 3 models with x-api-key header authentication.
+**Cross-references:**
+- References: Core/Services/AIService/AIProvider.swift, Core/Services/KeychainManager.swift
+- Referenced by: Core/Services/AIService/AIServiceManager.swift
+
+### Core/Services/AIService/AIServiceManager.swift
+**Description:** Singleton manager coordinating all AI providers, handling provider selection, API key management, connection testing, and request routing.
+**Cross-references:**
+- References: All AI provider implementations, Core/Models/UserSettings.swift, Core/Services/KeychainManager.swift
+- Referenced by: Settings/AppSettingsView.swift, UI/Components/AIProviderSetupView.swift, application features using AI
+
+### Core/DragDrop/ContactTransferable.swift
+**Description:** NSItemProvider implementation for contact drag-and-drop operations, defining how contact data is transferred between applications.
+**Cross-references:**
+- References: Core/Models/Contact.swift, Core/DragDrop/DragTypes.swift
+- Referenced by: Core/Services/DragDropManager.swift
+
+### Core/DragDrop/DragTypes.swift
+**Description:** Type definitions for drag-and-drop operations including UniformTypeIdentifiers for contact data transfer.
+**Cross-references:**
+- References: Core/Models/Contact.swift
+- Referenced by: Core/DragDrop/ContactTransferable.swift, Core/Services/DragDropManager.swift
+
+### Core/DragDrop/ProviderBridge.swift
+**Description:** Bridge between macOS Contacts framework and application's contact system, handling contact import and synchronization.
+**Cross-references:**
+- References: Core/Models/Contact.swift, Contacts framework
+- Referenced by: Contact import functionality
+
+## UI DIRECTORY
+
+### UI/Shell/MainCRMView.swift
+**Description:** Main application shell view providing the primary interface layout, navigation, and content area management.
+**Cross-references:**
+- References: UI/Shell/WorkspaceView.swift, UI/Shell/ContactsBarView.swift, State/AppState.swift
+- Referenced by: App/MyCRMApp.swift
+
+### UI/Shell/WorkspaceView.swift
+**Description:** Workspace container view managing different application pages and navigation between major features.
+**Cross-references:**
+- References: UI/Pages/ directory, State/AppState.swift
+- Referenced by: UI/Shell/MainCRMView.swift
+
+### UI/Shell/ContentView.swift
+**Description:** Legacy content view providing basic application structure and navigation.
+**Cross-references:**
+- References: Basic SwiftUI structure
+- Referenced by: Development testing
+
+### UI/Shell/ContactsBarView.swift
+**Description:** Sidebar view displaying contact list with search, filtering, and selection capabilities.
+**Cross-references:**
+- References: Core/Models/Contact.swift, Core/Services/SQLiteDataProvider.swift
+- Referenced by: UI/Shell/MainCRMView.swift
+
+### UI/Shell/PageNavBarView.swift
+**Description:** Navigation bar component providing page switching and application navigation controls.
+**Cross-references:**
+- References: State/AppState.swift
+- Referenced by: UI/Shell/MainCRMView.swift
+
+### UI/Components/ContactNodeView.swift
+**Description:** Reusable contact display component showing contact information with drag-and-drop support and interaction handling.
+**Cross-references:**
+- References: Core/Models/Contact.swift, Core/Services/DragDropManager.swift
+- Referenced by: UI/Shell/ContactsBarView.swift, UI/Pages/PeopleMaps/GroupsMapCanvas.swift
+
+### UI/Components/DragPreview.swift
+**Description:** Custom drag preview component providing visual feedback during drag-and-drop operations.
+**Cross-references:**
+- References: Core/Models/Contact.swift
+- Referenced by: Core/Services/DragDropManager.swift
+
+### UI/Components/AIProviderSetupView.swift
+**Description:** Guided setup modal for configuring AI provider connections with step-by-step instructions, API key validation, and automatic connection testing.
+**Cross-references:**
+- References: Core/Services/AIService/AIServiceManager.swift, Core/Models/UserSettings.swift (AIProviderType)
+- Referenced by: Settings/AppSettingsView.swift
+
+### UI/Components/GroupCircleView.swift
+**Description:** Visual component for displaying contact groups in circular arrangements with drag-and-drop support.
+**Cross-references:**
+- References: Core/Models/Group.swift, Core/Models/Contact.swift
+- Referenced by: UI/Pages/PeopleMaps/GroupsMapCanvas.swift
+
+### UI/Pages/PeopleMaps/GroupsMapCanvas.swift
+**Description:** Canvas view for visualizing contact relationships and groups in a spatial arrangement with interactive elements.
+**Cross-references:**
+- References: Core/Models/CanvasModels.swift, Core/Models/Contact.swift, UI/Components/GroupCircleView.swift
+- Referenced by: UI/Pages/PeopleMaps/CanvasContainer.swift
+
+### UI/Pages/PeopleMaps/GroupsMapViewModel.swift
+**Description:** View model managing the state and business logic for the groups map canvas, handling data flow and user interactions.
+**Cross-references:**
+- References: Core/Services/CanvasRepository.swift, Core/Models/CanvasModels.swift
+- Referenced by: UI/Pages/PeopleMaps/GroupsMapCanvas.swift
+
+### UI/Pages/PeopleMaps/CanvasContainer.swift
+**Description:** Container view for canvas functionality providing layout and interaction management for canvas-based views.
+**Cross-references:**
+- References: UI/Pages/PeopleMaps/GroupsMapCanvas.swift, Core/Models/CanvasModels.swift
+- Referenced by: UI/Pages/PeopleMaps/CanvasGestures.swift
+
+### UI/Pages/PeopleMaps/CanvasGestures.swift
+**Description:** Gesture handling implementation for canvas interactions including pan, zoom, and selection gestures.
+**Cross-references:**
+- References: UI/Pages/PeopleMaps/CanvasContainer.swift, Core/Models/CanvasModels.swift
+- Referenced by: UI/Pages/PeopleMaps/GroupsMapCanvas.swift
+
+### UI/Pages/PeopleMaps/CanvasOverlay.swift
+**Description:** Overlay component for canvas providing additional UI elements and controls overlaid on the canvas view.
+**Cross-references:**
+- References: UI/Pages/PeopleMaps/GroupsMapCanvas.swift
+- Referenced by: Canvas interaction components
+
+### UI/Pages/PeopleMaps/CanvasElementsOverlay.swift
+**Description:** Overlay for canvas elements providing visual feedback and interaction controls for individual canvas elements.
+**Cross-references:**
+- References: Core/Models/CanvasModels.swift
+- Referenced by: UI/Pages/PeopleMaps/GroupsMapCanvas.swift
+
+### UI/Pages/PeopleMaps/SandboxView.swift
+**Description:** Development sandbox view for testing canvas functionality and new features in isolation.
+**Cross-references:**
+- References: Core/Models/CanvasModels.swift
+- Referenced by: Development testing
+
+### UI/Pages/PeopleMaps/SimplifiedCanvasView.swift
+**Description:** Simplified canvas implementation for basic contact visualization and interaction testing.
+**Cross-references:**
+- References: Core/Models/CanvasModels.swift
+- Referenced by: Development testing
+
+### UI/Pages/CanvasManagement/CanvasManagementView.swift
+**Description:** Management interface for creating, editing, and organizing canvas layouts and configurations. Supports canvas selection and deletion via keyboard (Delete/Backspace) or swipe gestures.
+**Cross-references:**
+- References: Core/Services/CanvasRepository.swift, Core/Models/CanvasModels.swift
+- Referenced by: Canvas management functionality
+
+### UI/Pages/CanvasManagement/CanvasEditorView.swift
+**Description:** Editor interface for modifying canvas properties, layouts, and element configurations.
+**Cross-references:**
+- References: Core/Models/CanvasModels.swift, Core/Services/CanvasRepository.swift
+- Referenced by: UI/Pages/CanvasManagement/CanvasManagementView.swift
+
+### UI/Pages/CanvasManagement/CanvasSettingsView.swift
+**Description:** Settings interface for configuring canvas behavior, appearance, and interaction preferences.
+**Cross-references:**
+- References: Core/Models/CanvasModels.swift
+- Referenced by: Canvas configuration
+
+### UI/Pages/CanvasManagement/AddElementView.swift
+**Description:** Interface for adding new elements to canvases including contacts, groups, and other visual elements.
+**Cross-references:**
+- References: Core/Models/CanvasModels.swift, Core/Models/Contact.swift
+- Referenced by: UI/Pages/CanvasManagement/CanvasEditorView.swift
+
+### UI/Pages/DeckBuilder/DeckBuilderView.swift
+**Description:** Interface for building and organizing contact decks for presentation and organization purposes.
+**Cross-references:**
+- References: Core/Models/Deck.swift, Core/Models/Contact.swift
+- Referenced by: Deck management functionality
+
+### UI/Modals/SettingsView.swift
+**Description:** Modal settings interface for application configuration including database settings and VCF import functionality.
+**Cross-references:**
+- References: Core/Services/SQLiteDataProvider.swift, App/Feature Groups/iMessage Server Scraper/Resources/vcf_check.py
+- Referenced by: Settings management
+
+### UI/Shared/AutoscrollController.swift
+**Description:** Utility controller for handling automatic scrolling in scrollable views with smooth animation and gesture integration.
+**Cross-references:**
+- References: SwiftUI scroll view integration
+- Referenced by: Scrollable UI components
+
+## STATE DIRECTORY
+
+### State/AppState.swift
+**Description:** Global application state management including navigation state, settings visibility, and application-wide state coordination.
+**Cross-references:**
+- References: All major UI components
+- Referenced by: UI/Shell/MainCRMView.swift, UI/Shell/WorkspaceView.swift
+
+## SETTINGS DIRECTORY
+
+### Settings/AppSettingsView.swift
+**Description:** Application settings interface for configuring preferences, permissions, and system integration options.
+**Cross-references:**
+- References: Core/Models/UserSettings.swift (SettingsManager)
+- Referenced by: Settings management via SettingsView
+
+## TESTS DIRECTORY
+
+### Tests/DragDropTests.swift
+**Description:** Unit tests for drag-and-drop functionality including contact transfer and visual feedback testing.
+**Cross-references:**
+- References: Core/Services/DragDropManager.swift, Core/DragDrop/ContactTransferable.swift
+- Referenced by: Test suite execution
+
+### Tests/FuzzyMatcherTests.swift
+**Description:** Unit tests for fuzzy string matching algorithm including various edge cases and performance testing.
+**Cross-references:**
+- References: Core/Services/FuzzyMatcher.swift
+- Referenced by: Test suite execution
+
+## FEATURES DIRECTORY
+
+### Features/ContentView.swift
+**Description:** Legacy features view providing basic feature demonstration and testing interface.
+**Cross-references:**
+- References: Basic SwiftUI structure
+- Referenced by: Development testing
+
+## IMESSAGE SERVER SCRAPER FEATURE GROUP
+
+### App/Feature Groups/iMessage Server Scraper/Resources/start.py
+**Description:** Main Python script orchestrating iMessage data import, contact synchronization, and database management. Handles script execution order and environment setup.
+**Cross-references:**
+- References: All Python modules in Resources/, database_utils.py, import_imessages.py, import_contacts.py
+- Referenced by: App/MyCRMApp.swift, Core/Services/ScriptPathResolver.swift
+
+### App/Feature Groups/iMessage Server Scraper/Resources/import_imessages.py
+**Description:** Python script for importing iMessage data from macOS chat.db, processing message history, and storing in CRM database with user identification.
+**Cross-references:**
+- References: Modules/imessage_tools.py, database_utils.py, User_Settings.json
+- Referenced by: start.py, App/MyCRMApp.swift
+
+### App/Feature Groups/iMessage Server Scraper/Resources/import_contacts.py
+**Description:** Python script for importing macOS Contacts.app data into the CRM database with profile photos and contact synchronization.
+**Cross-references:**
+- References: database_utils.py, Contacts framework
+- Referenced by: start.py, contact synchronization
+
+### App/Feature Groups/iMessage Server Scraper/Resources/database_utils.py
+**Description:** Database utility module providing connection management, schema operations, and database abstraction layer for all Python scripts.
+**Cross-references:**
+- References: SQLite3, database schema definitions
+- Referenced by: All Python scripts requiring database access
+
+### App/Feature Groups/iMessage Server Scraper/Resources/canvas_manager.py
+**Description:** Python module for managing canvas data and operations, providing canvas persistence and retrieval functionality.
+**Cross-references:**
+- References: database_utils.py, Core/Models/CanvasModels.swift
+- Referenced by: Canvas data management
+
+### App/Feature Groups/iMessage Server Scraper/Resources/vcf_check.py
+**Description:** VCF file validation and processing utility for contact import functionality with user interface for file selection.
+**Cross-references:**
+- References: tkinter UI, User_Settings.json
+- Referenced by: Contact import functionality
+
+### App/Feature Groups/iMessage Server Scraper/Resources/get_last_message_timestamp.py
+**Description:** Utility script for retrieving the timestamp of the most recent message in the database for synchronization tracking.
+**Cross-references:**
+- References: database_utils.py
+- Referenced by: App/MyCRMApp.swift, synchronization logic
+
+### App/Feature Groups/iMessage Server Scraper/Resources/update_chatGPT.py
+**Description:** Script for updating ChatGPT-related data and processing AI-generated content in the CRM system.
+**Cross-references:**
+- References: database_utils.py
+- Referenced by: AI integration features
+
+### App/Feature Groups/iMessage Server Scraper/Resources/update_group_membership.py
+**Description:** Script for managing contact group memberships and updating group relationships in the database.
+**Cross-references:**
+- References: database_utils.py, Core/Models/Group.swift
+- Referenced by: Group management functionality
+
+### App/Feature Groups/iMessage Server Scraper/Resources/evaluate_date_of_first_contact.py
+**Description:** Analysis script for determining the first contact date between users based on message history analysis.
+**Cross-references:**
+- References: database_utils.py, import_imessages.py
+- Referenced by: Contact relationship analysis
+
+### App/Feature Groups/iMessage Server Scraper/Resources/debug_contacts.py
+**Description:** Debugging utility for contact data analysis and troubleshooting contact import issues.
+**Cross-references:**
+- References: database_utils.py, Contacts framework
+- Referenced by: Development and debugging
+
+### App/Feature Groups/iMessage Server Scraper/Resources/test_database_schema.py
+**Description:** Database schema validation and testing script ensuring database integrity and proper table structure.
+**Cross-references:**
+- References: database_utils.py, database_requirements.json
+- Referenced by: Database testing and validation
+
+### App/Feature Groups/iMessage Server Scraper/Resources/requirements.txt
+**Description:** Python dependencies list for the iMessage Server Scraper feature group including all required packages and versions.
+**Cross-references:**
+- References: All Python scripts in Resources/
+- Referenced by: Python environment setup
+
+### App/Feature Groups/iMessage Server Scraper/Resources/-- Old -- User_Preferences
+**Description:** DEPRECATED - Legacy configuration file. Replaced by ~/Library/Application Support/My_CRM/User_Settings.json managed by SettingsManager.
+**Cross-references:**
+- References: All Python scripts requiring configuration
+- Referenced by: import_imessages.py, import_contacts.py, vcf_check.py
+
+### App/Feature Groups/iMessage Server Scraper/Resources/-- Old -- User_Preferences_Template
+**Description:** DEPRECATED - Legacy template file. User_Settings.json is now auto-created with defaults by SettingsManager.
+**Cross-references:**
+- References: Deprecated User_Preferences format
+- Referenced by: None (deprecated)
+
+### App/Feature Groups/iMessage Server Scraper/Resources/DATABASE_SCHEMA.md
+**Description:** Documentation of database schema including table structures, relationships, and data types for the CRM system.
+**Cross-references:**
+- References: database_utils.py, database_requirements.json
+- Referenced by: Database development and maintenance
+
+### App/Feature Groups/iMessage Server Scraper/Resources/RequestNotification.swift
+**Description:** Swift component for requesting notification permissions and handling notification-related functionality.
+**Cross-references:**
+- References: UserNotifications framework
+- Referenced by: Notification features
+
+### App/Feature Groups/iMessage Server Scraper/Resources/Modules/imessage_tools.py
+**Description:** Core iMessage processing module providing functions for reading chat.db, parsing messages, and extracting conversation data.
+**Cross-references:**
+- References: ccl_bplist.py, chat.db structure
+- Referenced by: import_imessages.py, all iMessage processing scripts
+
+### App/Feature Groups/iMessage Server Scraper/Resources/Modules/ccl_bplist.py
+**Description:** Binary property list parser for reading macOS system files including chat.db binary data and message attachments.
+**Cross-references:**
+- References: Binary data parsing
+- Referenced by: imessage_tools.py, message processing
+
+### App/Feature Groups/iMessage Server Scraper/Resources/Modules/ccl_bplist_example.py
+**Description:** Example usage and testing script for the ccl_bplist module demonstrating binary property list parsing.
+**Cross-references:**
+- References: ccl_bplist.py
+- Referenced by: Development and testing
+
+### App/Feature Groups/iMessage Server Scraper/Resources/Modules/setup.py
+**Description:** Python package setup script for the Modules directory enabling proper import handling and distribution.
+**Cross-references:**
+- References: All modules in Modules/
+- Referenced by: Python package management
+
+### App/Feature Groups/iMessage Server Scraper/Resources/Modules/README.md
+**Description:** Documentation for the Modules directory explaining the purpose and usage of each module component.
+**Cross-references:**
+- References: All files in Modules/
+- Referenced by: Module development and usage
+
+### App/Feature Groups/iMessage Server Scraper/MacOS/Launch_Server.sh
+**Description:** Shell script for launching the iMessage server and managing the Python backend process with proper environment setup.
+**Cross-references:**
+- References: start.py, Python environment
+- Referenced by: App/MyCRMApp.swift, backend management
+
+### App/Feature Groups/iMessage Server Scraper/MacOS/Uninstall_Server.sh
+**Description:** Shell script for cleaning up server installation and removing associated files and processes.
+**Cross-references:**
+- References: Launch_Server.sh, installed components
+- Referenced by: Uninstallation process
+
+### App/Feature Groups/iMessage Server Scraper/MacOS/install_cron.sh
+**Description:** Shell script for installing cron jobs to automatically run data synchronization at scheduled intervals.
+**Cross-references:**
+- References: cron_update.sh, system scheduling
+- Referenced by: Automated synchronization
+
+### App/Feature Groups/iMessage Server Scraper/MacOS/uninstall_cron.sh
+**Description:** Shell script for removing cron jobs and cleaning up scheduled synchronization tasks.
+**Cross-references:**
+- References: install_cron.sh, cron jobs
+- Referenced by: Uninstallation process
+
+### App/Feature Groups/iMessage Server Scraper/MacOS/cron_update.sh
+**Description:** Shell script executed by cron jobs to perform periodic data updates and synchronization.
+**Cross-references:**
+- References: start.py, data synchronization
+- Referenced by: install_cron.sh, automated updates
+
+### App/Feature Groups/iMessage Server Scraper/MacOS/request_notification
+**Description:** Executable for requesting notification permissions and handling notification-related system integration.
+**Cross-references:**
+- References: RequestNotification.swift
+- Referenced by: Notification features
+
+### App/Feature Groups/iMessage Server Scraper/MacOS/com.mycrm.crmlaunch.plist
+**Description:** LaunchAgent plist file for automatically starting the CRM backend when the user logs in.
+**Cross-references:**
+- References: Launch_Server.sh
+- Referenced by: System startup integration
+
+### App/Feature Groups/iMessage Server Scraper/MacOS/com.mycrm.cronupdate.plist
+**Description:** LaunchAgent plist file for managing cron job execution and scheduled updates.
+**Cross-references:**
+- References: cron_update.sh
+- Referenced by: Automated synchronization
+
+## RESOURCES DIRECTORY
+
+### Resources/Assets.xcassets/AppIcon.appiconset/Contents.json
+**Description:** App icon asset catalog configuration defining the application icon in various sizes and resolutions.
+**Cross-references:**
+- References: App icon image files
+- Referenced by: Application bundle, Xcode project
+
+### Resources/Assets.xcassets/StatusBarIcon.imageset/Contents.json
+**Description:** Status bar icon asset configuration for the menu bar extra icon display.
+**Cross-references:**
+- References: StatusBarIcon image files
+- Referenced by: App/MyCRMApp.swift, menu bar integration
+
+### Resources/mycrm.brand.json
+**Description:** Brand configuration file defining application branding, colors, and visual identity settings.
+**Cross-references:**
+- References: UI styling and branding
+- Referenced by: UI components, visual design
+
+## XCODE PROJECT FILES
+
+### My CRM.xcodeproj/project.pbxproj
+**Description:** Xcode project file containing build settings, target configurations, and file references for the entire project.
+**Cross-references:**
+- References: All Swift files, resources, and project structure
+- Referenced by: Xcode IDE, build system
+
+### My CRM/My_CRM.entitlements
+**Description:** Application entitlements file defining permissions and capabilities required by the macOS application.
+**Cross-references:**
+- References: System permissions, app capabilities
+- Referenced by: macOS system integration
+
+## TEST FILES
+
+### My CRMTests/My_CRMTests.swift
+**Description:** Main test suite for the My CRM application including unit tests and integration tests.
+**Cross-references:**
+- References: All application components
+- Referenced by: Test suite execution
+
+### My CRMUITests/My_CRMUITests.swift
+**Description:** UI automation tests for the application interface including user interaction testing and UI validation.
+**Cross-references:**
+- References: UI components and user flows
+- Referenced by: UI testing automation
+
+### My CRMUITests/My_CRMUITestsLaunchTests.swift
+**Description:** Launch testing for application startup and initialization validation.
+**Cross-references:**
+- References: App/MyCRMApp.swift, application startup
+- Referenced by: Launch testing
+
+## DOCUMENTATION FILES
+
+### Documentation/Features/Canvas/CANVAS_CONTROLS_IMPLEMENTATION.md
+**Description:** Technical documentation for canvas control implementation including interaction patterns and user interface design.
+**Cross-references:**
+- References: UI/Pages/PeopleMaps/, Core/Models/CanvasModels.swift
+- Referenced by: Canvas development
+
+### Documentation/Features/Canvas/CANVAS_DATABASE_IMPLEMENTATION.md
+**Description:** Database implementation documentation for canvas data storage, retrieval, and persistence strategies.
+**Cross-references:**
+- References: Core/Services/CanvasRepository.swift, database_utils.py
+- Referenced by: Database development
+
+### Documentation/Features/Canvas/CANVAS_HIERARCHY_STRUCTURE.md
+**Description:** Documentation of canvas hierarchy and organizational structure for contact visualization and management.
+**Cross-references:**
+- References: Core/Models/CanvasModels.swift, UI/Pages/PeopleMaps/
+- Referenced by: Canvas architecture
+
+### Documentation/Features/Canvas/CANVAS_UI_IMPLEMENTATION.md
+**Description:** UI implementation guide for canvas components including layout, styling, and interaction patterns.
+**Cross-references:**
+- References: UI/Pages/PeopleMaps/, UI/Components/
+- Referenced by: UI development
+
+### Documentation/Features/Canvas/CONTACT_TO_CANVAS_INTEGRATION.md
+**Description:** Integration documentation for connecting contact data with canvas visualization and management systems.
+**Cross-references:**
+- References: Core/Models/Contact.swift, Core/Models/CanvasModels.swift
+- Referenced by: Integration development
+
+### Documentation/Features/Messaging/LAST_MESSAGE_TIMESTAMP_UPDATE.md
+**Description:** Documentation for message timestamp tracking and synchronization update mechanisms.
+**Cross-references:**
+- References: get_last_message_timestamp.py, App/MyCRMApp.swift
+- Referenced by: Synchronization development
+
+### Documentation/Development/PROPOSED_FILE_STRUCTURE.md
+**Description:** Proposed file organization and structure documentation for future development and refactoring.
+**Cross-references:**
+- References: Current file structure
+- Referenced by: Development planning
+
+### Documentation/Development/REFACTORING_PLAN.md
+**Description:** Technical refactoring plan documenting code improvements, architectural changes, and optimization strategies.
+**Cross-references:**
+- References: Current codebase structure
+- Referenced by: Development planning
+
+### Documentation/Development/deprecated_code.md
+**Description:** Documentation of deprecated code components and migration strategies for maintaining code quality.
+**Cross-references:**
+- References: Deprecated components
+- Referenced by: Code maintenance
+
+## LOG FILES
+
+### App/Feature Groups/iMessage Server Scraper/Resources/Logs/contact_scan_log.txt
+**Description:** Log file tracking contact scanning and import operations with detailed error reporting and progress tracking.
+**Cross-references:**
+- References: import_contacts.py, contact operations
+- Referenced by: Debugging and monitoring
+
+### App/Feature Groups/iMessage Server Scraper/Resources/Logs/crm_log.txt
+**Description:** General CRM application log file containing system events, user actions, and application state changes.
+**Cross-references:**
+- References: All application components
+- Referenced by: System monitoring and debugging
+
+### App/Feature Groups/iMessage Server Scraper/Resources/Logs/imessage_import_logs.txt
+**Description:** Specific log file for iMessage import operations including message processing and database operations.
+**Cross-references:**
+- References: import_imessages.py, message processing
+- Referenced by: Import debugging and monitoring
+
+### App/Feature Groups/iMessage Server Scraper/Resources/Modules/Logs/imessage_tools_log.txt
+**Description:** Log file for imessage_tools module operations including binary data parsing and message extraction.
+**Cross-references:**
+- References: imessage_tools.py, ccl_bplist.py
+- Referenced by: Module debugging
+
+## ARCHIVE FILES
+
+### App/Feature Groups/iMessage Server Scraper/Resources/Archive/import_imessages (working 07_05).py
+**Description:** Archived version of the iMessage import script from July 5th, maintained for reference and rollback purposes.
+**Cross-references:**
+- References: import_imessages.py, historical implementation
+- Referenced by: Version history and rollback
+
+### App/Feature Groups/iMessage Server Scraper/Resources/Archive/imessage_tools copy.py
+**Description:** Archived copy of imessage_tools module maintained for backup and comparison purposes.
+**Cross-references:**
+- References: imessage_tools.py, module development
+- Referenced by: Version comparison and backup
+
+## BUILD FILES
+
+### build/My CRM.app/Contents/Resources/Feature Groups/iMessage Server Scraper/Resources/
+**Description:** Built application bundle containing all Python scripts and resources packaged for distribution.
+**Cross-references:**
+- References: All source files in App/Feature Groups/
+- Referenced by: Application distribution and execution
+
+---
+
+## SUMMARY
+
+This file map documents 150+ files across the My CRM application, providing a comprehensive overview of:
+
+1. **Core Architecture**: Swift-based macOS application with Python backend for iMessage processing
+2. **Data Management**: SQLite database with contact, message, and canvas data models
+3. **UI Components**: SwiftUI-based interface with canvas visualization and drag-and-drop functionality
+4. **Backend Services**: Python scripts for iMessage import, contact synchronization, and data processing
+5. **System Integration**: macOS system integration including Contacts.app, notifications, and launch agents
+6. **Testing**: Comprehensive test suite covering unit tests, UI tests, and integration tests
+7. **Documentation**: Extensive documentation covering implementation details, architecture, and development plans
+
+The application follows a modular architecture with clear separation between UI, business logic, data access, and system integration layers, enabling maintainable development and extensible functionality.

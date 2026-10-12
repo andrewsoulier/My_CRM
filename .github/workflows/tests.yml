@@ -1,0 +1,95 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run tests daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  test:
+    runs-on: macos-latest
+    
+    strategy:
+      matrix:
+        swift-version: ['5.9', '5.10']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Swift
+      uses: swift-actions/setup-swift@v1
+      with:
+        swift-version: ${{ matrix.swift-version }}
+        
+    - name: Cache Swift Package Manager
+      uses: actions/cache@v3
+      with:
+        path: .build
+        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-
+          
+    - name: Run Tests
+      run: |
+        cd "My CRM"
+        swift test --enable-code-coverage
+        
+    - name: Generate Test Report
+      run: |
+        cd "My CRM"
+        ./Tests/run_tests.sh all
+        
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results-${{ matrix.swift-version }}
+        path: |
+          My CRM/test_results/
+          My CRM/.build/
+          
+    - name: Upload Coverage Reports
+      uses: codecov/codecov-action@v3
+      if: matrix.swift-version == '5.10'
+      with:
+        file: ./My CRM/.build/debug/codecov/default.profdata
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  build-test:
+    runs-on: macos-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Swift
+      uses: swift-actions/setup-swift@v1
+      with:
+        swift-version: '5.10'
+        
+    - name: Build Application
+      run: |
+        cd "My CRM"
+        swift build
+        
+    - name: Test Build Script
+      run: |
+        cd "My CRM"
+        ./build_app.sh "CI Test Build"
+        
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: build-artifacts
+        path: |
+          My CRM/build/
+          My CRM/andrewsoulier/My_CRM Project/Working Files, not part of app/Project Archives/

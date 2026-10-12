@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Grid View</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@31.2.1/styles/ag-grid.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@31.2.1/styles/ag-theme-alpine.css" />
+    <style>
+      :root {
+        color-scheme: dark light;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+      }
+      
+      /* Dark mode styles */
+      @media (prefers-color-scheme: dark) {
+        html, body {
+          background: #13151a;
+          color: #f5f6f9;
+        }
+      }
+      
+      /* Light mode styles */
+      @media (prefers-color-scheme: light) {
+        html, body {
+          background: #ffffff;
+          color: #1d1d1f;
+        }
+      }
+      #app {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 18px;
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        header {
+          background: rgba(255, 255, 255, 0.03);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+      }
+      
+      @media (prefers-color-scheme: light) {
+        header {
+          background: rgba(0, 0, 0, 0.02);
+          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+      }
+      header h1 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0;
+        letter-spacing: 0.4px;
+      }
+      header .status {
+        font-size: 12px;
+        min-height: 18px;
+        transition: color 0.2s ease;
+        display: none; /* Hide status text */
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        header .status {
+          color: #9ba3b4;
+        }
+      }
+      
+      @media (prefers-color-scheme: light) {
+        header .status {
+          color: #6e6e73;
+        }
+      }
+      
+      header .column-menu-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px 8px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s ease;
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        header .column-menu-button {
+          color: #9ba3b4;
+        }
+        header .column-menu-button:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+      
+      @media (prefers-color-scheme: light) {
+        header .column-menu-button {
+          color: #6e6e73;
+        }
+        header .column-menu-button:hover {
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+      }
+      
+      header .column-menu-button svg {
+        width: 18px;
+        height: 18px;
+      }
+      #gridContainer {
+        flex: 1;
+        min-height: 0;
+        padding: 12px 18px 18px;
+      }
+      #grid {
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      /* Dark mode grid styles */
+      @media (prefers-color-scheme: dark) {
+        .ag-theme-alpine {
+          --ag-background-color: #1a1d24;
+          --ag-odd-row-background-color: #1f2329;
+          --ag-header-background-color: #252932;
+          --ag-foreground-color: #e8eaed;
+          --ag-border-color: rgba(255, 255, 255, 0.08);
+          --ag-row-hover-color: rgba(67, 153, 255, 0.15);
+          --ag-selected-row-background-color: rgba(82, 140, 255, 0.25);
+          --ag-header-foreground-color: #d4d8e0;
+          --ag-data-color: #e8eaed;
+          --ag-input-text-color: #e8eaed;
+          --ag-input-border-color: rgba(255, 255, 255, 0.15);
+          --ag-secondary-foreground-color: #b8bcc8;
+          --ag-disabled-foreground-color: #6b7280;
+        }
+        .ag-theme-alpine .ag-cell {
+          color: #e8eaed !important;
+          background-color: transparent !important;
+          font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif !important;
+        }
+        .ag-theme-alpine .ag-cell-value {
+          color: #e8eaed !important;
+          font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif !important;
+        }
+        .ag-theme-alpine .ag-row {
+          background-color: #1a1d24 !important;
+        }
+        .ag-theme-alpine .ag-row-odd {
+          background-color: #1f2329 !important;
+        }
+        .ag-theme-alpine .ag-header-cell {
+          background-color: #252932 !important;
+          color: #d4d8e0 !important;
+        }
+        .ag-theme-alpine .ag-header-cell-text {
+          color: #d4d8e0 !important;
+        }
+      }
+      
+      /* Light mode grid styles */
+      @media (prefers-color-scheme: light) {
+        .ag-theme-alpine {
+          --ag-background-color: #ffffff;
+          --ag-odd-row-background-color: #f8f9fa;
+          --ag-header-background-color: #f1f3f5;
+          --ag-foreground-color: #1d1d1f;
+          --ag-border-color: rgba(0, 0, 0, 0.1);
+          --ag-row-hover-color: rgba(67, 153, 255, 0.08);
+          --ag-selected-row-background-color: rgba(82, 140, 255, 0.12);
+          --ag-header-foreground-color: #424245;
+          --ag-data-color: #1d1d1f;
+          --ag-input-text-color: #1d1d1f;
+          --ag-input-border-color: rgba(0, 0, 0, 0.2);
+        }
+        .ag-theme-alpine .ag-cell {
+          color: #1d1d1f !important;
+          font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif !important;
+        }
+        .ag-theme-alpine .ag-cell-value {
+          color: #1d1d1f !important;
+          font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif !important;
+        }
+      }
+      .toast {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        padding: 12px 16px;
+        background: rgba(38, 43, 55, 0.95);
+        color: #f5f6f9;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+        font-size: 13px;
+        z-index: 99;
+        max-width: 320px;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+      .chip-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        align-items: center;
+        min-height: 20px;
+      }
+      
+      /* Dark mode chip styles */
+      @media (prefers-color-scheme: dark) {
+        .chip {
+          padding: 2px 8px;
+          border-radius: 999px;
+          background: rgba(67, 153, 255, 0.18);
+          color: #dbe6ff;
+          font-size: 11px;
+          line-height: 1.4;
+          white-space: nowrap;
+          border: 1px solid rgba(123, 178, 255, 0.35);
+          font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+        }
+      }
+      
+      /* Light mode chip styles */
+      @media (prefers-color-scheme: light) {
+        .chip {
+          padding: 2px 8px;
+          border-radius: 999px;
+          background: rgba(67, 153, 255, 0.15);
+          color: #1e3a8a;
+          font-size: 11px;
+          line-height: 1.4;
+          white-space: nowrap;
+          border: 1px solid rgba(67, 153, 255, 0.4);
+          font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+        }
+      }
+      
+      .chip-color {
+        border-color: transparent;
+      }
+      
+      /* Search highlight styles */
+      .search-highlight {
+        background-color: rgba(255, 235, 59, 0.4) !important;
+        animation: searchPulse 0.5s ease-in-out;
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        .search-highlight {
+          background-color: rgba(255, 235, 59, 0.3) !important;
+        }
+      }
+      
+      @keyframes searchPulse {
+        0% {
+          background-color: rgba(255, 235, 59, 0.6);
+        }
+        100% {
+          background-color: rgba(255, 235, 59, 0.4);
+        }
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        @keyframes searchPulse {
+          0% {
+            background-color: rgba(255, 235, 59, 0.5);
+          }
+          100% {
+            background-color: rgba(255, 235, 59, 0.3);
+          }
+        }
+      }
+      
+      /* Non-editable cell styling - plain gray text */
+      .non-editable-cell {
+        /* Color is set inline by JavaScript based on color scheme */
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        .non-editable-cell {
+          color: #9ba3b4 !important;
+        }
+      }
+      
+      @media (prefers-color-scheme: light) {
+        .non-editable-cell {
+          color: #6e6e73 !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+        <header>
+          <h1>Grid View</h1>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <button id="undoButton" class="column-menu-button" title="Undo">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+              </svg>
+            </button>
+            <button id="redoButton" class="column-menu-button" title="Redo">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6" />
+              </svg>
+            </button>
+            <button id="filterButton" class="column-menu-button" title="Filter">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              </svg>
+            </button>
+            <button id="columnMenuButton" class="column-menu-button" title="Column Visibility">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <button id="addColumnButton" class="column-menu-button" title="Add Column">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+            </button>
+            <div id="status" class="status"></div>
+          </div>
+        </header>
+      <div id="gridContainer">
+        <div id="grid" class="ag-theme-alpine"></div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@31.2.1/dist/ag-grid-community.min.js"></script>
+    <script>
+      (function () {
+        const AG = agGrid;
+        let gridApi = null;
+        let gridColumnApi = null;
+        let currentEntity = "contacts";
+        let nativeReady = false;
+        let gridReady = false;
+        let sessionId = null;
+        const pendingPageRequests = new Map();
+        const customColumns = {
+          contacts: [],
+          groups: []
+        };
+        const currentViewConfig = {
+          contacts: null,
+          groups: null
+        };
+        let suppressColumnState = false;
+        let columnStateDebounce = null;
+        let totalRowCount = null;
+        let toastTimeout = null;
+        const chipColumns = new Set([
+          "contact.groups",
+          "contact.tags",
+          "contact.relationships",
+          "group.participants",
+          "group.tags",
+          "group.children",
+          "group.parents"
+        ]);
+        const columnCreateCounter = { contacts: 0, groups: 0 };
+
+        function formatDisplayDate(value) {
+          if (!value) return "";
+          const date = new Date(value);
+          if (Number.isNaN(date.getTime())) return value;
+          const month = date.toLocaleString("en-US", { month: "short" });
+          const day = date.getDate();
+          const suffix = getOrdinalSuffix(day);
+          const time = date
+            .toLocaleString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })
+            .replace(" ", "")
+            .replace("AM", "am")
+            .replace("PM", "pm");
+          const year = date.getFullYear();
+          return `${month} ${day}${suffix}, ${time}, ${year}`;
+        }
+
+        function getOrdinalSuffix(day) {
+          if (day >= 11 && day <= 13) {
+            return "th";
+          }
+          switch (day % 10) {
+            case 1:
+              return "st";
+            case 2:
+              return "nd";
+            case 3:
+              return "rd";
+            default:
+              return "th";
+          }
+        }
+
+        function normaliseChipValues(value) {
+          if (value == null) {
+            return [];
+          }
+          if (Array.isArray(value)) {
+            return value
+              .map(item => String(item).trim())
+              .filter(Boolean);
+          }
+          if (typeof value === "string") {
+            return value
+              .split(",")
+              .map(part => part.trim())
+              .filter(Boolean);
+          }
+          return [String(value)];
+        }
+
+        function chipsRenderer(params) {
+          const container = document.createElement("div");
+          container.className = "chip-container";
+          const columnId = params.column?.getColId() || "";
+          
+          // Check if this is the groups column for contacts
+          const isGroupsColumn = columnId === "contact.groups";
+          
+          // Handle both array of objects (with colors) and array of strings (legacy)
+          let values = [];
+          let groupColors = {};
+          
+          if (isGroupsColumn && Array.isArray(params.value)) {
+            // Check if we have objects with name and color properties
+            const firstItem = params.value[0];
+            if (firstItem && typeof firstItem === "object" && firstItem.name) {
+              // New format: array of objects with name and color
+              values = params.value.map(item => item.name || String(item));
+              params.value.forEach(item => {
+                if (item && typeof item === "object" && item.name && item.color) {
+                  groupColors[item.name] = item.color;
+                }
+              });
+            } else {
+              // Legacy format: array of strings
+              values = normaliseChipValues(params.value);
+            }
+          } else {
+            // Not a groups column or not an array - use normal processing
+            values = normaliseChipValues(params.value);
+          }
+          
+          if (values.length === 0) {
+            // If no values, return empty container (don't show anything)
+            return container;
+          }
+          
+          values.forEach(value => {
+            const chip = document.createElement("span");
+            chip.className = "chip";
+            // Use textContent which properly preserves emojis and Unicode characters
+            // The font-family is already set in CSS for .chip class
+            chip.textContent = value;
+            
+            // Apply group color if available
+            if (isGroupsColumn && groupColors[value]) {
+              const color = groupColors[value];
+              const normalized = color.startsWith("#") ? color : `#${color}`;
+              chip.style.background = normalized;
+              chip.style.color = getContrastColor(normalized);
+              chip.style.borderColor = normalized;
+            }
+            
+            container.appendChild(chip);
+          });
+          return container;
+        }
+        
+        // Simple text renderer for single string values (like phone numbers)
+        // Ensures proper emoji rendering by using textContent which preserves Unicode characters
+        function textRenderer(params) {
+          const container = document.createElement("div");
+          container.style.padding = "4px 8px";
+          // Ensure emoji-friendly font is applied
+          container.style.fontFamily = '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif';
+          // Color will be inherited from parent cell styling
+          const value = params.value;
+          if (value == null || value === "" || (Array.isArray(value) && value.length === 0)) {
+            container.textContent = "";
+          } else if (Array.isArray(value)) {
+            // Use textContent which properly preserves emojis and Unicode characters
+            container.textContent = value.join(", ");
+          } else {
+            // textContent properly handles emojis - no need for innerHTML
+            container.textContent = String(value);
+          }
+          return container;
+        }
+
+        // Plain text renderer for non-editable columns - shows plain text with gray color
+        // No chip pills, just simple gray text
+        function plainTextRenderer(params) {
+          const container = document.createElement("div");
+          container.className = "non-editable-cell";
+          container.style.padding = "4px 8px";
+          container.style.fontFamily = '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif';
+          
+          // Apply gray color based on color scheme
+          try {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+              container.style.color = '#9ba3b4'; // Gray for dark mode
+            } else {
+              container.style.color = '#6e6e73'; // Gray for light mode
+            }
+          } catch (e) {
+            // Fallback to light mode gray if media query fails
+            container.style.color = '#6e6e73';
+          }
+          
+          const value = params.value;
+          if (value == null || value === "" || (Array.isArray(value) && value.length === 0)) {
+            container.textContent = "";
+          } else if (Array.isArray(value)) {
+            // For arrays, join with comma and space (no chips)
+            container.textContent = value.join(", ");
+          } else {
+            container.textContent = String(value);
+          }
+          return container;
+        }
+
+        function colorRenderer(params) {
+          const container = document.createElement("div");
+          container.className = "chip-container";
+          const value = params.value;
+          if (!value) {
+            return container;
+          }
+          const chip = document.createElement("span");
+          chip.className = "chip chip-color";
+          const text = String(value).trim();
+          chip.textContent = text;
+          const normalized = text.startsWith("#") ? text : `#${text}`;
+          chip.style.background = normalized;
+          chip.style.color = getContrastColor(normalized);
+          container.appendChild(chip);
+          return container;
+        }
+
+        function getContrastColor(hex) {
+          const sanitized = hex.replace("#", "");
+          if (sanitized.length !== 6 || Number.isNaN(parseInt(sanitized, 16))) {
+            return "#0f1116";
+          }
+          const r = parseInt(sanitized.slice(0, 2), 16);
+          const g = parseInt(sanitized.slice(2, 4), 16);
+          const b = parseInt(sanitized.slice(4, 6), 16);
+          const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+          return luminance > 0.6 ? "#0f1116" : "#f5f6f9";
+        }
+
+        function profilePhotoRenderer(params) {
+          const container = document.createElement("div");
+          container.style.display = "flex";
+          container.style.alignItems = "center";
+          container.style.justifyContent = "center";
+          container.style.width = "100%";
+          container.style.height = "100%";
+          container.style.padding = "4px";
+          container.style.cursor = "pointer";
+          container.style.position = "relative";
+          
+          const img = document.createElement("img");
+          img.style.maxWidth = "80px";
+          img.style.maxHeight = "80px";
+          img.style.objectFit = "cover";
+          img.style.borderRadius = "4px";
+          img.style.border = "1px solid rgba(255, 255, 255, 0.1)";
+          
+          if (params.value && params.value.startsWith("data:image")) {
+            img.src = params.value;
+            img.alt = "Profile photo";
+            container.appendChild(img);
+          } else {
+            // Placeholder for empty photo
+            const placeholder = document.createElement("div");
+            placeholder.style.width = "80px";
+            placeholder.style.height = "80px";
+            placeholder.style.border = "2px dashed rgba(255, 255, 255, 0.3)";
+            placeholder.style.borderRadius = "4px";
+            placeholder.style.display = "flex";
+            placeholder.style.alignItems = "center";
+            placeholder.style.justifyContent = "center";
+            placeholder.style.fontSize = "12px";
+            placeholder.style.color = "rgba(255, 255, 255, 0.5)";
+            placeholder.textContent = "Drop image";
+            container.appendChild(placeholder);
+          }
+          
+          // Handle drag and drop
+          container.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            container.style.backgroundColor = "rgba(67, 153, 255, 0.2)";
+          });
+          
+          container.addEventListener("dragleave", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            container.style.backgroundColor = "";
+          });
+          
+          container.addEventListener("drop", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            container.style.backgroundColor = "";
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+              const file = files[0];
+              if (file.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                  const dataUrl = event.target.result;
+                  // Update the cell value
+                  if (params.setValue) {
+                    params.setValue(dataUrl);
+                  }
+                  // Send edit message to native
+                  const message = {
+                    type: "edit",
+                    payload: {
+                      entityType: currentEntity,
+                      recordId: params.data.recordId,
+                      columnId: params.colDef.field,
+                      value: dataUrl
+                    }
+                  };
+                  postNativeMessage(message);
+                };
+                reader.readAsDataURL(file);
+              }
+            }
+          });
+          
+          return container;
+        }
+
+        function markCellError(recordId, columnId) {
+          if (!gridApi) return;
+          const node = gridApi.getRowNode(recordId);
+          if (!node) return;
+          if (chipColumns.has(columnId)) {
+            node.setDataValue(columnId, ["(!)"]);
+          } else {
+            node.setDataValue(columnId, "(!)");
+          }
+        }
+
+        // Custom comparator for name sorting: A-Z, 0-9, special chars, spaces, null/empty at end
+        function nameComparator(valueA, valueB, nodeA, nodeB, isDescending) {
+          const a = valueA == null || valueA === "" ? "" : String(valueA).trim();
+          const b = valueB == null || valueB === "" ? "" : String(valueB).trim();
+          
+          // Empty/null values go to the end
+          if (a === "" && b === "") return 0;
+          if (a === "") return 1; // a is empty, b is not - a goes after
+          if (b === "") return -1; // b is empty, a is not - b goes after
+          
+          // Get first character
+          const firstA = a.charAt(0).toLowerCase();
+          const firstB = b.charAt(0).toLowerCase();
+          
+          // Check character types
+          const isLetterA = /[a-z]/.test(firstA);
+          const isLetterB = /[a-z]/.test(firstB);
+          const isDigitA = /[0-9]/.test(firstA);
+          const isDigitB = /[0-9]/.test(firstB);
+          const isSpaceA = /\s/.test(firstA);
+          const isSpaceB = /\s/.test(firstB);
+          
+          // Priority: Letters > Digits > Special > Spaces
+          if (isLetterA && !isLetterB) return -1;
+          if (!isLetterA && isLetterB) return 1;
+          if (isDigitA && !isDigitB && !isLetterB) return -1;
+          if (!isDigitA && isDigitB && !isLetterA) return 1;
+          if (isSpaceA && !isSpaceB && !isLetterB && !isDigitB) return -1;
+          if (!isSpaceA && isSpaceB && !isLetterA && !isDigitA) return 1;
+          
+          // Same type, do case-insensitive comparison
+          return a.localeCompare(b, undefined, { sensitivity: "base", numeric: true });
+        }
+
+        const contactColumns = [
+          { field: "recordId", hide: true },
+          { field: "contact.name", headerName: "Name", editable: true, minWidth: 200, pinned: "left", comparator: nameComparator },
+          { field: "contact.first_name", headerName: "First Name", editable: true, minWidth: 140 },
+          { field: "contact.last_name", headerName: "Last Name", editable: true, minWidth: 140 },
+          { field: "contact.nickname", headerName: "Nickname", editable: true, minWidth: 140 },
+          { field: "contact.phone", headerName: "Phone", editable: false, minWidth: 140, cellRenderer: plainTextRenderer },
+          { field: "contact.profile_photo", headerName: "Photo", editable: true, minWidth: 100, maxWidth: 100, cellRenderer: profilePhotoRenderer },
+          { field: "contact.email", headerName: "Email", editable: true, minWidth: 200, cellRenderer: chipsRenderer },
+          { field: "contact.address", headerName: "Address", editable: true, minWidth: 220 },
+          { field: "contact.notes", headerName: "Notes", editable: true, minWidth: 220 },
+          {
+            field: "contact.groups",
+            headerName: "Groups",
+            editable: true,
+            minWidth: 200,
+            valueFormatter: arrayFormatter,
+            tooltipValueGetter: arrayTooltip,
+            cellRenderer: chipsRenderer
+          },
+          {
+            field: "contact.creation_date",
+            headerName: "Creation Date",
+            editable: true,
+            minWidth: 180,
+            valueFormatter: dateFormatter
+          },
+          {
+            field: "contact.birthday",
+            headerName: "Birthday",
+            editable: true,
+            minWidth: 160,
+            valueFormatter: dateFormatter
+          },
+          {
+            field: "contact.total_messages",
+            headerName: "Total Messages",
+            editable: false,
+            minWidth: 140,
+            type: "numericColumn",
+            cellRenderer: plainTextRenderer
+          },
+          {
+            field: "contact.messages_sent",
+            headerName: "Messages Sent",
+            editable: false,
+            minWidth: 140,
+            type: "numericColumn",
+            cellRenderer: plainTextRenderer
+          },
+          {
+            field: "contact.messages_received",
+            headerName: "Messages Received",
+            editable: false,
+            minWidth: 160,
+            type: "numericColumn",
+            cellRenderer: plainTextRenderer
+          },
+          {
+            field: "contact.last_message_received",
+            headerName: "Last Message Received",
+            editable: false,
+            minWidth: 200,
+            valueFormatter: dateFormatter,
+            cellRenderer: function(params) {
+              if (!params.value || params.value === "" || params.value === null) {
+                return "";
+              }
+              const container = document.createElement("div");
+              container.className = "non-editable-cell";
+              container.style.padding = "4px 8px";
+              container.style.fontFamily = '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif';
+              // Color will be applied by CSS class
+              container.textContent = dateFormatter(params);
+              return container;
+            }
+          },
+          {
+            field: "contact.last_message_sent",
+            headerName: "Last Message Sent",
+            editable: false,
+            minWidth: 200,
+            valueFormatter: dateFormatter,
+            cellRenderer: function(params) {
+              if (!params.value || params.value === "" || params.value === null) {
+                return "";
+              }
+              const container = document.createElement("div");
+              container.className = "non-editable-cell";
+              container.style.padding = "4px 8px";
+              container.style.fontFamily = '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif';
+              // Color will be applied by CSS class
+              container.textContent = dateFormatter(params);
+              return container;
+            }
+          },
+          {
+            field: "contact.tags",
+            headerName: "Tags",
+            editable: true,
+            minWidth: 200,
+            valueFormatter: arrayFormatter,
+            tooltipValueGetter: arrayTooltip,
+            cellRenderer: chipsRenderer
+          },
+          {
+            field: "contact.relationships",
+            headerName: "Relationships",
+            editable: true,
+            minWidth: 220,
+            valueFormatter: arrayFormatter,
+            tooltipValueGetter: arrayTooltip,
+            cellRenderer: chipsRenderer
+          }
+        ];
+
+        const groupColumns = [
+          { field: "recordId", hide: true },
+          { field: "group.name", headerName: "Name", editable: true, minWidth: 200, pinned: "left" },
+          { field: "group.participants", headerName: "Participants", editable: true, minWidth: 220, valueFormatter: arrayFormatter, tooltipValueGetter: arrayTooltip, cellRenderer: chipsRenderer },
+          { field: "group.color", headerName: "Color", editable: true, minWidth: 120, cellRenderer: colorRenderer },
+          { field: "group.created_at", headerName: "Created Date", editable: false, minWidth: 180, valueFormatter: dateFormatter, cellRenderer: plainTextRenderer },
+          { field: "group.size", headerName: "Size", editable: false, minWidth: 90, type: "numericColumn", cellRenderer: plainTextRenderer },
+          { field: "group.tags", headerName: "Tags", editable: true, minWidth: 200, valueFormatter: arrayFormatter, tooltipValueGetter: arrayTooltip, cellRenderer: chipsRenderer },
+          { field: "group.children", headerName: "Children Groups", editable: true, minWidth: 200, valueFormatter: arrayFormatter, tooltipValueGetter: arrayTooltip, cellRenderer: chipsRenderer },
+          { field: "group.parents", headerName: "Parent Groups", editable: false, minWidth: 200, valueFormatter: arrayFormatter, tooltipValueGetter: arrayTooltip, cellRenderer: plainTextRenderer }
+        ];
+
+        const gridOptions = {
+          columnDefs: [],
+          defaultColDef: {
+            resizable: true,
+            sortable: true,
+            filter: false,
+            minWidth: 120,
+            flex: 1,
+            valueFormatter: defaultFormatter
+          },
+          rowModelType: "infinite",
+          cacheBlockSize: 200,
+          maxBlocksInCache: 4,
+          datasource: null,
+          animateRows: true,
+          rowSelection: "multiple",
+          enableRangeSelection: true,
+          enableClipboard: true,
+          suppressContextMenu: false,
+          getContextMenuItems: getContextMenuItems,
+          enableFillHandle: true,
+          undoRedoCellEditing: true,
+          undoRedoCellEditingLimit: 50,
+          suppressFieldDotNotation: true,
+          getRowId: params => params.data.recordId,
+          onCellValueChanged: handleCellValueChanged,
+          processDataFromClipboard: handleClipboardData,
+          onPasteEnd: handlePasteEnd,
+          onColumnMoved: () => scheduleColumnStateBroadcast(),
+          onColumnPinned: () => scheduleColumnStateBroadcast(),
+          onColumnVisible: () => scheduleColumnStateBroadcast()
+        };
+
+        function buildColumnDefs(entity) {
+          const base = entity === "contacts" ? contactColumns : groupColumns;
+          return base.concat(customColumns[entity]);
+        }
+
+        function arrayFormatter(params) {
+          return normaliseChipValues(params.value).join(", ");
+        }
+
+        function arrayTooltip(params) {
+          return normaliseChipValues(params.value).join(", ");
+        }
+
+        function dateFormatter(params) {
+          if (!params.value || params.value === null || params.value === "") return "";
+          // Handle both ISO8601 strings and Date objects
+          const dateValue = typeof params.value === "string" ? params.value : params.value;
+          return formatDisplayDate(dateValue);
+        }
+        
+        // Default value formatter that handles null/undefined
+        // Properly preserves emojis and Unicode characters when converting to string
+        function defaultFormatter(params) {
+          if (params.value == null || params.value === "") {
+            return "";
+          }
+          // String() conversion properly preserves emojis and Unicode characters
+          return String(params.value);
+        }
+
+        function handleCellValueChanged(event) {
+          if (!event.newValue || event.newValue === event.oldValue) {
+            return;
+          }
+          const message = {
+            type: "edit",
+            payload: {
+              entityType: currentEntity,
+              recordId: event.data.recordId,
+              columnId: event.colDef.field,
+              value: serializeValueForNative(event.newValue)
+            }
+          };
+          postNativeMessage(message);
+        }
+
+        function serializeValueForNative(value) {
+          if (Array.isArray(value)) {
+            return value;
+          }
+          if (typeof value === "string" && value.includes(",")) {
+            // Split comma separated chips back into array
+            return value.split(",").map(v => v.trim()).filter(Boolean);
+          }
+          return value;
+        }
+
+        function handleClipboardData(params) {
+          if (!gridApi || !gridColumnApi || !params || !Array.isArray(params.data)) {
+            return params?.data;
+          }
+          const data = params.data;
+          if (data.length === 0) {
+            return data;
+          }
+          const columnCount = data.reduce((max, row) => Math.max(max, row.length), 0);
+          const columns = gridColumnApi.getAllGridColumns();
+          if (!columns || columns.length === 0) {
+            return data;
+          }
+          const focused = gridApi.getFocusedCell();
+          const startIndex = focused
+            ? columns.findIndex(col => col.getColId() === focused.column.getColId())
+            : 0;
+          const normalizedStart = startIndex >= 0 ? startIndex : 0;
+          const available = columns.length - normalizedStart;
+          const deficit = columnCount - available;
+          if (deficit > 0) {
+            ensureExtraColumns(deficit);
+          }
+          return data;
+        }
+
+        function ensureExtraColumns(count) {
+          const view = currentViewConfig[currentEntity];
+          const viewUUID = view && view.uuid ? view.uuid : null;
+          const userId = view && view.userId ? view.userId : "default";
+          for (let i = 0; i < count; i += 1) {
+            columnCreateCounter[currentEntity] = (columnCreateCounter[currentEntity] || 0) + 1;
+            const name = `Pasted Column ${columnCreateCounter[currentEntity]}`;
+            postNativeMessage({
+              type: "createCustomColumn",
+              payload: {
+                entityType: currentEntity,
+                viewUUID,
+                userId,
+                name,
+                dataType: "text"
+              }
+            });
+          }
+          showToast(
+            `Adding ${count} column${count > 1 ? "s" : ""} to fit pasted data`,
+            "info"
+          );
+        }
+
+        function handlePasteEnd() {
+          setStatus("Pasted data", false);
+        }
+
+        function getContextMenuItems(params) {
+          const result = [];
+          
+          // Only show delete option if rows are selected
+          const selectedRows = gridApi.getSelectedRows();
+          if (selectedRows && selectedRows.length > 0) {
+            result.push({
+              name: selectedRows.length === 1 ? "Delete Row" : `Delete ${selectedRows.length} Rows`,
+              action: () => {
+                const recordIds = selectedRows.map(row => row.recordId).filter(Boolean);
+                if (recordIds.length > 0) {
+                  postNativeMessage({
+                    type: "deleteRows",
+                    payload: {
+                      recordIds: recordIds
+                    }
+                  });
+                }
+              },
+              cssClasses: ['ag-menu-option-delete'],
+              icon: '<span class="ag-icon ag-icon-cross"></span>'
+            });
+          }
+          
+          return result;
+        }
+
+        function makeDatasource() {
+          return {
+            getRows: params => {
+              const offset = params.startRow;
+              const limit = params.endRow - params.startRow;
+              pendingPageRequests.set(offset, params);
+              postNativeMessage({
+                type: "requestPage",
+                payload: {
+                  entityType: currentEntity,
+                  offset,
+                  limit,
+                  sortModel: params.sortModel,
+                  filterModel: params.filterModel
+                }
+              });
+            }
+          };
+        }
+
+        function applyRowUpdate(row) {
+          if (!gridApi || !row) return;
+          const node = gridApi.getRowNode(row.recordId);
+          if (node) {
+            node.updateData(row);
+          } else {
+            gridApi.applyTransaction({ add: [row] });
+          }
+        }
+
+        function applyCustomColumns(entity, columns) {
+          customColumns[entity] = columns.map(column => {
+            const isSmartChip = column.dataType === "smartchip";
+            return {
+              field: column.uuid,
+              headerName: column.name,
+              editable: !isSmartChip,
+              minWidth: 160,
+              valueFormatter: column.dataType === "date" ? dateFormatter : undefined,
+              cellRenderer: isSmartChip ? chipsRenderer : undefined
+            };
+          });
+          if (entity === currentEntity && gridColumnApi) {
+            gridColumnApi.setColumnDefs(buildColumnDefs(currentEntity));
+            const view = currentViewConfig[currentEntity];
+            if (view) {
+              setTimeout(() => applyViewPreset(view), 0);
+            }
+          }
+        }
+
+        function scheduleColumnStateBroadcast() {
+          if (!gridColumnApi || suppressColumnState) return;
+          if (columnStateDebounce) {
+            clearTimeout(columnStateDebounce);
+          }
+          columnStateDebounce = setTimeout(() => {
+            columnStateDebounce = null;
+            const snapshot = captureColumnStateSnapshot();
+            postNativeMessage({
+              type: "columnStateChanged",
+              payload: {
+                entityType: currentEntity,
+                columnOrder: snapshot.order,
+                visibleColumns: snapshot.visible,
+                frozenColumns: snapshot.frozen
+              }
+            });
+          }, 120);
+        }
+
+        function captureColumnStateSnapshot() {
+          if (!gridColumnApi) {
+            return { order: [], visible: [], frozen: [] };
+          }
+          const columns = gridColumnApi.getAllGridColumns();
+          const order = [];
+          const visible = [];
+          const frozen = [];
+          columns.forEach(column => {
+            const colId = column.getColId();
+            if (!colId || colId === "recordId") return;
+            order.push(colId);
+            if (column.isVisible()) {
+              visible.push(colId);
+            }
+            if (column.getPinned && column.getPinned() === "left") {
+              frozen.push(colId);
+            }
+          });
+          return { order, visible, frozen };
+        }
+
+        function applyViewPreset(view) {
+          if (!gridColumnApi || !view) return;
+          suppressColumnState = true;
+          try {
+            const allColumns = gridColumnApi
+              .getAllGridColumns()
+              .map(column => column.getColId())
+              .filter(colId => colId && colId !== "recordId");
+
+            const viewOrder = Array.isArray(view.columnOrder) ? view.columnOrder.filter(Boolean) : [];
+            const finalOrder = [...viewOrder];
+            allColumns.forEach(colId => {
+              if (!finalOrder.includes(colId)) {
+                finalOrder.push(colId);
+              }
+            });
+
+            const stateMap = new Map();
+            const ensureState = colId => {
+              if (!stateMap.has(colId)) {
+                stateMap.set(colId, { colId });
+              }
+              return stateMap.get(colId);
+            };
+
+            finalOrder.forEach((colId, index) => {
+              ensureState(colId).order = index;
+            });
+
+            const frozenSet = new Set(Array.isArray(view.frozenColumns) ? view.frozenColumns.filter(Boolean) : []);
+            finalOrder.forEach(colId => {
+              ensureState(colId).pinned = frozenSet.has(colId) ? "left" : null;
+            });
+
+            const visibleColumns = Array.isArray(view.visibleColumns) ? view.visibleColumns.filter(Boolean) : [];
+            if (visibleColumns.length > 0) {
+              const visibleSet = new Set(visibleColumns);
+              finalOrder.forEach(colId => {
+                ensureState(colId).hide = !visibleSet.has(colId);
+              });
+            } else {
+              finalOrder.forEach(colId => {
+                ensureState(colId).hide = false;
+              });
+            }
+
+            gridColumnApi.applyColumnState({
+              state: Array.from(stateMap.values()),
+              applyOrder: true,
+              defaultState: { pinned: null, hide: false }
+            });
+          } finally {
+            suppressColumnState = false;
+          }
+        }
+
+        function showToast(message, tone = "info") {
+          if (toastTimeout) {
+            clearTimeout(toastTimeout);
+          }
+          let toast = document.getElementById("grid-toast");
+          if (!toast) {
+            toast = document.createElement("div");
+            toast.id = "grid-toast";
+            toast.className = "toast";
+            document.body.appendChild(toast);
+          }
+          toast.textContent = message;
+          toast.style.opacity = "1";
+          toast.style.transform = "translateY(0)";
+          toastTimeout = setTimeout(() => {
+            toast.style.opacity = "0";
+            toast.style.transform = "translateY(-10px)";
+          }, 3200);
+        }
+
+        function setStatus(message, isError = false) {
+          const status = document.getElementById("status");
+          status.textContent = message || "";
+          // Use CSS variables or media query for color
+          if (isError) {
+            status.style.color = "#ff8c8c";
+          } else {
+            // Color will be set by CSS media query
+            status.style.color = "";
+          }
+        }
+
+        function initializeGrid() {
+          const gridDiv = document.getElementById("grid");
+          gridOptions.columnDefs = buildColumnDefs(currentEntity);
+          gridOptions.datasource = makeDatasource();
+          new AG.Grid(gridDiv, gridOptions);
+          gridApi = gridOptions.api;
+          gridColumnApi = gridOptions.columnApi;
+          gridReady = true;
+          const preset = currentViewConfig[currentEntity];
+          if (preset) {
+            setTimeout(() => applyViewPreset(preset), 0);
+          }
+          if (nativeReady) {
+            notifyReady();
+          }
+        }
+
+        function notifyReady() {
+          if (!gridReady || !nativeReady) return;
+          postNativeMessage({
+            type: "gridReady",
+            entityType: currentEntity
+          });
+        }
+
+        function postNativeMessage(message) {
+          if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.gridBridge) {
+            window.webkit.messageHandlers.gridBridge.postMessage(JSON.stringify(message));
+          } else {
+            console.debug("Native bridge unavailable", message);
+          }
+        }
+
+        function handleNativeEvent(message) {
+          switch (message.type) {
+            case "nativeReady":
+              sessionId = message.payload.sessionId;
+              currentEntity = message.payload.defaultEntity || "contacts";
+              nativeReady = true;
+              if (gridApi) {
+                gridApi.setColumnDefs(buildColumnDefs(currentEntity));
+                gridApi.setDatasource(makeDatasource());
+              }
+              notifyReady();
+              break;
+            case "viewsLoaded":
+              // handled by Swift sidebar; no-op for web
+              break;
+            case "activeViewChanged":
+              if (message.payload && message.payload.view) {
+                const view = message.payload.view;
+                if (view && view.entityType) {
+                  currentViewConfig[view.entityType] = view;
+                  if (view.entityType === currentEntity) {
+                    // Apply view preset (columns, visibility, etc.)
+                    setTimeout(() => applyViewPreset(view), 0);
+                    // CRITICAL: Force refresh the datasource to apply new filters
+                    // This ensures the new view's filters are used instead of cached data
+                    if (gridApi) {
+                      // Clear the cache and refresh to load data with new filters
+                      gridApi.purgeInfiniteCache();
+                      gridApi.refreshInfiniteCache();
+                    }
+                  }
+                }
+              }
+              break;
+            case "pageData":
+              handlePageData(message.payload);
+              break;
+            case "editApplied":
+              applyRowUpdate(message.payload.row);
+              showToast("Saved changes", "success");
+              break;
+            case "undoApplied":
+              applyRowUpdate(message.payload.row);
+              showToast("Undo applied");
+              break;
+            case "redoApplied":
+              applyRowUpdate(message.payload.row);
+              showToast("Redo applied");
+              break;
+            case "undoUnavailable":
+              showToast("Nothing to undo");
+              break;
+            case "redoUnavailable":
+              showToast("Nothing to redo");
+              break;
+            case "entityChanged":
+              currentEntity = message.payload.entityType || currentEntity;
+              sessionId = message.payload.sessionId || sessionId;
+              pendingPageRequests.clear();
+              if (gridApi) {
+                gridApi.setDatasource(makeDatasource());
+                gridApi.setColumnDefs(buildColumnDefs(currentEntity));
+                gridApi.purgeInfiniteCache();
+                const preset = currentViewConfig[currentEntity];
+                if (preset) {
+                  setTimeout(() => applyViewPreset(preset), 0);
+                }
+              }
+              break;
+            case "customColumnsUpdated":
+              applyCustomColumns(message.payload.entityType, message.payload.columns || []);
+              break;
+            case "editError": {
+              const payload = message.payload || {};
+              if (payload.recordId && payload.columnId) {
+                markCellError(payload.recordId, payload.columnId);
+              }
+              const msg = typeof payload.message === "string" && payload.message.length > 0 ? payload.message : null;
+              if (msg) {
+                setStatus(msg, true);
+                showToast(msg, "error");
+              }
+              break;
+            }
+            case "error":
+              setStatus(message.payload && message.payload.message ? message.payload.message : "Unknown error", true);
+              showToast(message.payload && message.payload.message ? message.payload.message : "Operation failed", "error");
+              break;
+            case "searchScrollToCell":
+            case "scrollToRow": {
+              const payload = message.payload || {};
+              const recordId = payload.recordId;
+              const columnId = payload.columnId;
+              const rowIndex = payload.rowIndex;
+              const isSearchActive = payload.isSearchActive !== false; // Default to true for searchScrollToCell
+              
+              if (gridApi && recordId) {
+                try {
+                  // Get the row node by recordId
+                  const node = gridApi.getRowNode(recordId);
+                  
+                  if (node) {
+                    // Scroll to make the row visible (but don't steal focus if searching)
+                    gridApi.ensureNodeVisible(node, 'middle');
+                    
+                    // Only set focus if NOT in active search mode
+                    // During search, we want to scroll to show the result but keep focus in search field
+                    if (columnId && !isSearchActive) {
+                      gridApi.setFocusedCell(node.rowIndex, columnId);
+                    }
+                    
+                    // Always highlight the cell to show the match
+                    if (columnId) {
+                      // Use a small delay to ensure the cell is rendered after scrolling
+                      setTimeout(() => {
+                        const cellElement = gridApi.getCellElement({ rowIndex: node.rowIndex, colKey: columnId });
+                        if (cellElement) {
+                          cellElement.classList.add('search-highlight');
+                          // Remove highlight after 2 seconds
+                          setTimeout(() => {
+                            cellElement.classList.remove('search-highlight');
+                          }, 2000);
+                        }
+                      }, 100);
+                    }
+                    
+                    console.log("✅ Scrolled to search result:", recordId, "at row", node.rowIndex, "column", columnId, "searchActive:", isSearchActive);
+                  } else {
+                    console.warn("⚠️ Row node not found for recordId:", recordId);
+                    // Try to scroll by row index if available
+                    if (typeof rowIndex === 'number') {
+                      gridApi.ensureIndexVisible(rowIndex, 'middle');
+                      // Only focus if not searching
+                      if (columnId && !isSearchActive) {
+                        gridApi.setFocusedCell(rowIndex, columnId);
+                      }
+                    }
+                  }
+                } catch (error) {
+                  console.error("❌ Error scrolling to search result:", error);
+                }
+              }
+              break;
+            }
+            case "searchResults":
+              // Store search results for navigation
+              if (message.payload && message.payload.results) {
+                console.log("📊 Search results received:", message.payload.results.length, "results");
+              }
+              break;
+            case "searchNavigate":
+              // Handle navigation between search results
+              // Don't focus cells during search navigation - keep focus in search field
+              if (message.payload && message.payload.result) {
+                const result = message.payload.result;
+                const recordId = result.recordId;
+                const columnId = result.columnId;
+                
+                if (gridApi && recordId) {
+                  const node = gridApi.getRowNode(recordId);
+                  if (node) {
+                    // Scroll to show the result but don't steal focus
+                    gridApi.ensureNodeVisible(node, 'middle');
+                    
+                    // Highlight the cell without focusing it
+                    if (columnId) {
+                      setTimeout(() => {
+                        const cellElement = gridApi.getCellElement({ rowIndex: node.rowIndex, colKey: columnId });
+                        if (cellElement) {
+                          cellElement.classList.add('search-highlight');
+                          setTimeout(() => {
+                            cellElement.classList.remove('search-highlight');
+                          }, 2000);
+                        }
+                      }, 100);
+                    }
+                  }
+                }
+              }
+              break;
+            case "searchClear":
+              // Clear all search highlights
+              if (gridApi) {
+                const highlightedCells = document.querySelectorAll('.search-highlight');
+                highlightedCells.forEach(cell => {
+                  cell.classList.remove('search-highlight');
+                });
+              }
+              break;
+            case "rowsDeleted":
+              // Refresh the grid after rows are deleted
+              if (gridApi) {
+                const payload = message.payload || {};
+                const recordIds = payload.recordIds || [];
+                if (recordIds.length > 0) {
+                  // Remove deleted rows from the grid
+                  recordIds.forEach(recordId => {
+                    const node = gridApi.getRowNode(recordId);
+                    if (node) {
+                      gridApi.applyTransaction({ remove: [node.data] });
+                    }
+                  });
+                  // Refresh the current page
+                  gridApi.refreshInfiniteCache();
+                  showToast(`Deleted ${recordIds.length} row${recordIds.length > 1 ? 's' : ''}`, "success");
+                }
+              }
+              break;
+            case "filterButtonState":
+              // Update filter button color based on whether filters are active
+              const filterButton = document.getElementById("filterButton");
+              if (filterButton) {
+                const hasActiveFilters = message.payload && message.payload.hasActiveFilters === true;
+                if (hasActiveFilters) {
+                  // Active filters - make button blue
+                  filterButton.style.color = "#007AFF"; // iOS blue
+                  filterButton.style.opacity = "1";
+                } else {
+                  // No active filters - reset to default
+                  filterButton.style.color = "";
+                  filterButton.style.opacity = "";
+                }
+              }
+              break;
+            case "requestCopy":
+              // Handle copy request - get selected cells and send to native
+              if (gridApi) {
+                const ranges = gridApi.getCellRanges();
+                if (ranges && ranges.length > 0) {
+                  // Get all cells in the selected ranges
+                  const copyData = [];
+                  ranges.forEach(range => {
+                    const startRow = range.startRow.rowIndex;
+                    const endRow = range.endRow.rowIndex;
+                    const startCol = range.columns[0];
+                    const endCol = range.columns[range.columns.length - 1];
+                    
+                    for (let rowIndex = startRow; rowIndex <= endRow; rowIndex++) {
+                      const row = [];
+                      const startColIndex = gridColumnApi.getAllGridColumns().findIndex(col => col.getColId() === startCol.getColId());
+                      const endColIndex = gridColumnApi.getAllGridColumns().findIndex(col => col.getColId() === endCol.getColId());
+                      
+                      for (let colIndex = startColIndex; colIndex <= endColIndex; colIndex++) {
+                        const col = gridColumnApi.getAllGridColumns()[colIndex];
+                        if (col) {
+                          const node = gridApi.getDisplayedRowAtIndex(rowIndex);
+                          if (node) {
+                            const value = node.data[col.getColId()];
+                            // Format value for clipboard
+                            let formattedValue = "";
+                            if (value == null || value === "") {
+                              formattedValue = "";
+                            } else if (Array.isArray(value)) {
+                              formattedValue = value.join(", ");
+                            } else {
+                              formattedValue = String(value);
+                            }
+                            row.push(formattedValue);
+                          }
+                        }
+                      }
+                      if (row.length > 0) {
+                        copyData.push(row);
+                      }
+                    }
+                  });
+                  
+                  // Convert to tab-separated format
+                  const tsvData = copyData.map(row => row.join("\t")).join("\n");
+                  
+                  // Send copy data back to native
+                  postNativeMessage({
+                    type: "copyResponse",
+                    payload: {
+                      data: tsvData
+                    }
+                  });
+                } else {
+                  // No selection - try to copy focused cell
+                  const focusedCell = gridApi.getFocusedCell();
+                  if (focusedCell) {
+                    const node = gridApi.getDisplayedRowAtIndex(focusedCell.rowIndex);
+                    if (node) {
+                      const value = node.data[focusedCell.column.getColId()];
+                      let formattedValue = "";
+                      if (value == null || value === "") {
+                        formattedValue = "";
+                      } else if (Array.isArray(value)) {
+                        formattedValue = value.join(", ");
+                      } else {
+                        formattedValue = String(value);
+                      }
+                      postNativeMessage({
+                        type: "copyResponse",
+                        payload: {
+                          data: formattedValue
+                        }
+                      });
+                    }
+                  }
+                }
+              }
+              break;
+            case "requestPaste":
+              // Handle paste request - paste clipboard data into grid
+              if (gridApi && message.payload && message.payload.clipboardData) {
+                const clipboardData = message.payload.clipboardData;
+                // Parse tab-separated data
+                const rows = clipboardData.split("\n").map(row => row.split("\t"));
+                
+                // Get focused cell or first selected cell
+                const focusedCell = gridApi.getFocusedCell();
+                if (focusedCell) {
+                  // Use AG Grid's built-in paste functionality
+                  // We'll simulate a paste event by setting cell values
+                  const startRowIndex = focusedCell.rowIndex;
+                  const startCol = focusedCell.column;
+                  const allColumns = gridColumnApi.getAllGridColumns();
+                  const startColIndex = allColumns.findIndex(col => col.getColId() === startCol.getColId());
+                  
+                  rows.forEach((row, rowOffset) => {
+                    const rowIndex = startRowIndex + rowOffset;
+                    const node = gridApi.getDisplayedRowAtIndex(rowIndex);
+                    if (node) {
+                      row.forEach((cellValue, colOffset) => {
+                        const colIndex = startColIndex + colOffset;
+                        if (colIndex < allColumns.length) {
+                          const col = allColumns[colIndex];
+                          if (col && col.getColDef().editable !== false) {
+                            // Set the cell value
+                            gridApi.setFocusedCell(rowIndex, col.getColId());
+                            // Trigger cell edit
+                            const cellValueChangedEvent = {
+                              data: node.data,
+                              newValue: cellValue,
+                              oldValue: node.data[col.getColId()],
+                              colDef: col.getColDef()
+                            };
+                            handleCellValueChanged(cellValueChangedEvent);
+                          }
+                        }
+                      });
+                    }
+                  });
+                  
+                  showToast("Pasted data", "success");
+                }
+              }
+              break;
+            default:
+              console.debug("Unhandled message", message);
+          }
+        }
+
+        function handlePageData(payload) {
+          const offset = payload.offset || 0;
+          const rows = payload.rows || [];
+          const total = payload.total;
+          totalRowCount = typeof total === "number" ? total : null;
+          
+          // Debug logging
+          console.log("📊 handlePageData: Received", rows.length, "rows at offset", offset);
+          if (rows.length > 0) {
+            console.log("📊 First row sample:", JSON.stringify(rows[0], null, 2));
+            console.log("📊 First row keys:", Object.keys(rows[0]));
+            console.log("📊 First row name value:", rows[0]["contact.name"]);
+          }
+          
+          const request = pendingPageRequests.get(offset);
+          if (request) {
+            const rowCount = totalRowCount != null ? totalRowCount : offset + rows.length;
+            console.log("📊 Calling successCallback with", rows.length, "rows, total:", rowCount);
+            request.successCallback(rows, rowCount);
+            pendingPageRequests.delete(offset);
+          } else {
+            console.warn("⚠️ handlePageData: No pending request found for offset", offset);
+          }
+          if (rows.length === 0) {
+            setStatus("No records available");
+          } else {
+            setStatus(`Loaded ${rows.length} rows`);
+          }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+          initializeGrid();
+          
+          // Handle column menu button click
+          const columnMenuButton = document.getElementById("columnMenuButton");
+          if (columnMenuButton) {
+            columnMenuButton.addEventListener("click", () => {
+              postNativeMessage({ type: "showColumnMenu" });
+            });
+          }
+          
+          // Handle add column button click
+          const addColumnButton = document.getElementById("addColumnButton");
+          if (addColumnButton) {
+            addColumnButton.addEventListener("click", () => {
+              postNativeMessage({ type: "showAddColumnSheet" });
+            });
+          }
+          
+          // Handle undo button click
+          const undoButton = document.getElementById("undoButton");
+          if (undoButton) {
+            undoButton.addEventListener("click", () => {
+              postNativeMessage({ type: "undo" });
+            });
+          }
+          
+          // Handle redo button click
+          const redoButton = document.getElementById("redoButton");
+          if (redoButton) {
+            redoButton.addEventListener("click", () => {
+              postNativeMessage({ type: "redo" });
+            });
+          }
+          
+          // Handle filter button click
+          const filterButton = document.getElementById("filterButton");
+          if (filterButton) {
+            filterButton.addEventListener("click", () => {
+              postNativeMessage({ type: "showFilterBuilder" });
+            });
+          }
+        });
+
+        document.addEventListener("keydown", event => {
+          if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "z") {
+            event.preventDefault();
+            if (event.shiftKey) {
+              postNativeMessage({ type: "redo" });
+            } else {
+              postNativeMessage({ type: "undo" });
+            }
+          }
+        });
+
+        window.gridBridge = {
+          handleNativeMessage(message) {
+            if (!message || typeof message !== "object") return;
+            handleNativeEvent(message);
+          }
+        };
+      })();
+    </script>
+  </body>
+</html>
+

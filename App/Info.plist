@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key>
+	<string>My CRM</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.andrewsoulier.mycrm</string>
+	<key>CFBundleName</key>
+	<string>My CRM</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSUserNotificationAlertStyle</key>
+	<string>alert</string>
+	<key>NSContactsUsageDescription</key>
+	<string>My CRM needs access to your contacts to sync and display contact information in the app.</string>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>My CRM needs permission to send messages through the Messages app on your behalf.</string>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.mycrm.contact-list</string>
+			<key>UTTypeDescription</key>
+			<string>My CRM Contact List</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>crmcontacts</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.mycrm.group</string>
+			<key>UTTypeDescription</key>
+			<string>My CRM Group</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>crmgroup</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

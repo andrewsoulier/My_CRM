@@ -1,0 +1,1544 @@
+{
+  "Application": {
+    "Name": "My CRM",
+    "Platform": "macOS",
+    "Architecture": "SwiftUI + Python Backend",
+    "Version": "1.0",
+    "Description": "A comprehensive Customer Relationship Management system with iMessage integration, visual canvas interface, and advanced contact management"
+  },
+  
+  "Core_Architecture": {
+    "Frontend": {
+      "Framework": "SwiftUI",
+      "Language": "Swift",
+      "Minimum_macOS_Version": "11.0",
+      "UI_Pattern": "MVVM with ObservableObject",
+      "State_Management": {
+        "Primary": "@Published properties",
+        "Secondary": "Combine framework",
+        "Data_Binding": "Two-way binding with @State and @Binding"
+      }
+    },
+    "Backend": {
+      "Language": "Python 3",
+      "Framework": "Custom modules",
+      "Database": "SQLite",
+      "Integration": "Process-based communication",
+      "Virtual_Environment": "Automatic venv management"
+    },
+    "Data_Flow": {
+      "Swift_to_Python": "Process execution with arguments",
+      "Python_to_Swift": "File-based communication and database updates",
+      "Real_time_Sync": "File system monitoring and timers"
+    }
+  },
+
+  "UI": {
+    "Navigation_Bars": {
+      "Expand_and_Collapse_Behaviors": {
+        "Each_collapsed_bar_should_be_a_percent_darker_than_the_previous": {
+          "Percent_darker": 5
+        },
+        "Each_collapsed_bar_should_only_show_the_logo_in_the_top_right_corner": {
+          "Logo_position": "top_right",
+          "Logo_size": "24x24",
+          "Logo_format": "PNG with @2x and @3x variants"
+        },
+        "Each_expanded_nav_bar_should_have_an_arrow_in_the_top_left_corner_to_collapse_the_view": {
+          "Arrow_position": "top_left",
+          "Arrow_icon": "chevron.left",
+          "Animation_duration": "0.3 seconds",
+          "Easing": "easeInOut"
+        }
+      },
+      "Page_Navigation": {
+        "PageNavBarView": {
+          "Responsive_design": true,
+          "Collapsible_sections": true,
+          "Breadcrumb_navigation": true,
+          "Page_titles": "Dynamic based on current view"
+        }
+      },
+      "Contacts_Bar": {
+        "ContactsBarView": {
+          "Search_functionality": true,
+          "Filter_options": true,
+          "Contact_preview": true,
+          "Drag_and_drop_support": true
+        }
+      }
+    },
+    
+    "Main_Workspace": {
+      "WorkspaceView": {
+        "Multi_pane_layout": true,
+        "Resizable_panels": true,
+        "Split_view_support": true,
+        "Full_screen_mode": true
+      },
+      "ContentView": {
+        "Status_display": {
+          "Backend_connection_status": true,
+          "Database_path_display": true,
+          "Last_update_time": true
+        },
+        "Minimum_window_size": {
+          "Width": 720,
+          "Height": 480
+        }
+      }
+    },
+
+    "Canvas_Interface": {
+      "GroupsMapCanvas": {
+        "Interactive_canvas": true,
+        "Zoom_and_pan": true,
+        "Grid_system": true,
+          "Contact_nodes": true,
+          "Group_circles": true,
+          "Connection_lines": true
+        }
+      },
+      "Canvas_Gestures": {
+        "Pan_Gesture": {
+          "Multi_touch_support": true,
+          "Proportional_panning": true,
+          "Edge_scrolling": true,
+          "Bounds_checking": true
+        },
+        "Zoom_Gesture": {
+          "Pinch_to_zoom": true,
+          "Zoom_center_stability": true,
+          "Zoom_limits": {
+            "Minimum": 0.02,
+            "Maximum": 3.0
+          },
+          "Smooth_zoom": true
+        },
+        "Marquee_Selection": {
+          "Rectangular_selection": true,
+          "Multi_select_support": true,
+          "Modifier_key_support": {
+            "Shift": "Add to selection",
+            "Option": "Subtract from selection",
+            "Command": "Toggle selection"
+          }
+        }
+      },
+      "Edge_Scrolling": {
+        "EdgeScrollingManager": {
+          "Edge_threshold": 50,
+          "Max_scroll_speed": 20,
+          "Scroll_frequency": "30fps",
+          "Bounds_aware": true,
+          "Smooth_scrolling": true
+        }
+      }
+    },
+    "Groups_Management_Page": {
+      "Purpose": "List all Groups, inspect members, and quickly add/remove contacts.",
+      "Primary_Views": {
+        "GroupsListPanel": {
+          "Virtualized_list": true,
+          "Pagination_or_VirtualScroll": "VirtualScroll",
+          "Sort_options": ["Name A→Z", "Name Z→A", "Size ↑", "Size ↓", "Last Updated ↑", "Last Updated ↓", "Favorite first", "Priority ↓"],
+          "Filter_options": {
+            "Favorites_only": true,
+            "Tagged_any_of": true,
+            "Tagged_all_of": true,
+            "Min_size": 0,
+            "Max_size": 100000,
+            "Updated_after": "ISO8601 or Apple UTC // clarify in backend",
+            "Owner_or_Creator": "String optional"
+          },
+          "Search": {
+            "Fuzzy": true,
+            "Debounce_ms": 200,
+            "Targets": ["Group name", "Tags"]
+          },
+          "Row_Content": ["Color dot", "Group name", "Member count", "Last updated", "Favorite star", "Priority badge"],
+          "Row_Actions": ["Open details", "Rename", "Favorite toggle", "Context menu"],
+          "Keyboard": {"Up/Down": "Navigate", "Enter": "Open details", "Cmd+F": "Focus search"}
+        },
+        "GroupDetailsPanel": {
+          "Header": ["Group name editable", "Color picker", "Favorite star", "Priority control (0-5)", "Tags editor"],
+          "MembersList": {
+            "Virtualized_list": true,
+            "Show": ["Avatar", "Name", "Phone/email tooltip", "Last message date", "Notes icon"],
+            "Sort": ["Name", "Last message", "Added date"],
+            "Filter": {"Has_recent_activity_days": 30, "Has_tag": true},
+            "Selection": {"Single": true, "Multi": true, "Shift_range": true}
+          },
+          "Add_Remove_Members": {
+            "Add_methods": ["Drag from ContactsBar", "+ button opens contact picker", "Paste phone/email to create or match"],
+            "Remove_methods": ["Delete key (with confirm)", "Context menu → Remove", "Bulk remove via multi-select"],
+            "Undo_Redo": true,
+            "Conflict_checks": ["Prevent duplicate member", "Warn if contact already in N groups when limit set // optional policy"],
+            "Edge_cases": ["Merged contacts update membership automatically", "If contact deleted, remove from group"],
+            "Bulk_Add_Workflow": {"Paste_multi_line": true, "Delimiter_support": [",", ";", "Newline"], "Preview_match_results": true}
+          },
+          "Insights_Sidebar": {
+            "Metrics": ["Member count", "Recent activity (7/30/90d)", "Top communicators", "Common tags"],
+            "Actions": ["Export members CSV", "Copy phones", "Start new message thread (planned)"]
+          }
+        }
+      },
+      "Interactions": {
+        "Drag_and_Drop": {
+          "From_ContactsBar_to_Members": true,
+          "Reorder_members": false,
+          "Drag_feedback": ["Ghost", "Drop highlight"],
+          "Invalid_drop_behavior": "Shake + tooltip"
+        },
+        "Context_Menus": {
+          "Group_row": ["Open", "Rename", "Duplicate", "Delete", "Favorite toggle", "Change color"],
+          "Member_row": ["Open contact", "Remove from group", "Add tag", "Message (planned)"]
+        },
+        "Keyboard_Shortcuts": {
+          "Cmd+N": "New group",
+          "Enter": "Open selected group",
+          "Delete": "Remove selected member(s) with confirmation",
+          "Cmd+D": "Duplicate group",
+          "Cmd+A": "Select all members in list when focus = MembersList",
+          "Esc": "Clear selection/close picker"
+        }
+      },
+      "Empty_and_Error_States": {
+        "No_groups": "Show friendly CTA to create first group",
+        "No_members": "Prompt to drag contacts or click +",
+        "Search_no_results": "Suggest clearing filters or creating a new group",
+        "Permission_errors": "Explain Contacts/iMessage permissions needed for rich details"
+      },
+      "Performance": {
+        "Virtual_lists": true,
+        "Incremental_loading": true,
+        "Debounced_search": true,
+        "Batch_updates": true
+      },
+      "Persistence": {
+        "Auto_save_on_edit": true,
+        "Debounce_ms": 300,
+        "Audit_log": ["member_added", "member_removed", "renamed", "color_changed", "tags_changed"]
+      },
+      "Design": {
+        "Layout": ["Left: GroupsListPanel", "Right: GroupDetailsPanel"],
+        "Resizable_split": true,
+        "Remember_panel_widths": true,
+        "A11y": ["Readable sizes", "VoiceOver labels", "High-contrast focus rings"],
+        "Empty_state_illustrations": true
+      }
+    },
+
+    "Visual_Components": {
+      "ContactNodeView": {
+        "Contact_display": {
+          "Name_display": true,
+          "Profile_photo": true,
+          "Status_indicators": true,
+          "Selection_state": true
+        },
+        "Interaction": {
+          "Tap_to_select": true,
+          "Drag_to_move": true,
+          "Context_menu": true
+        },
+        "Styling": {
+          "Size": "Dynamic based on content",
+          "Border": "2px when selected",
+          "Shadow": "Subtle drop shadow"
+        }
+      },
+      "GroupCircleView": {
+        "Group_display": {
+          "Name_display": true,
+          "Member_count": true,
+          "Color_coding": true,
+          "Size_based_on_members": true
+        },
+        "Interaction": {
+          "Tap_to_select": true,
+          "Drag_to_move": true,
+          "Resize_handles": true
+        },
+        "Styling": {
+          "Border_radius": "50%",
+          "Gradient_fill": true,
+          "Transparency": "0.8 alpha"
+        }
+      },
+      "DragPreview": {
+        "Visual_feedback": {
+          "Ghost_image": true,
+          "Drop_indicators": true,
+          "Valid_drop_zones": true
+        },
+        "Animation": {
+          "Smooth_movement": true,
+          "Scale_effect": true,
+          "Opacity_effect": true
+        }
+      }
+    },
+
+    "Modals_and_Dialogs": {
+      "SettingsView": {
+        "Database_settings": true,
+        "User_preferences": true,
+        "Theme_selection": true,
+        "Notification_settings": true
+      },
+      "GroupQuickMenu": {
+        "Overlapping_groups": true,
+        "Quick_selection": true,
+        "Position_aware": true
+      },
+      "File_Pickers": {
+        "Database_selection": true,
+        "Contact_import": true,
+        "Export_options": true
+      }
+    },
+
+    "HUD_Components": {
+      "CanvasHUD": {
+        "Zoom_controls": true,
+        "Grid_toggle": true,
+        "Mode_indicators": true,
+        "Status_information": true
+      },
+      "MarqueeSelection": {
+        "Selection_rectangle": true,
+        "Visual_feedback": true,
+        "Real_time_updates": true
+      }
+    }
+  },
+
+  "Data_Management": {
+    "Database_Schema": {
+      "Contacts_Table": {
+        "Primary_key": "id (INTEGER AUTOINCREMENT)",
+        "Fields": {
+          "phone": "TEXT UNIQUE",
+          "name": "TEXT",
+          "email": "TEXT",
+          "first_name": "TEXT",
+          "last_name": "TEXT",
+          "address": "TEXT",
+          "notes": "TEXT",
+          "creation_date": "TEXT",
+          "business": "TEXT",
+          "contact_group": "TEXT",
+          "birthday": "TEXT",
+          "apple_contact_id": "TEXT UNIQUE",
+          "profile_photo": "BLOB",
+          "first_message_date": "TEXT",
+          "last_message_date": "TEXT",
+          "total_messages": "INTEGER",
+          "messages_sent": "INTEGER",
+          "messages_received": "INTEGER",
+          "is_primary_user": "INTEGER DEFAULT 0",
+          "sent_last_message": "INTEGER",
+          "groups": "TEXT DEFAULT '{}'"
+        }
+      },
+      "Groups_Table": {
+        "Primary_key": "id (INTEGER AUTOINCREMENT)",
+        "Fields": {
+          "name": "TEXT NOT NULL",
+          "participants": "TEXT DEFAULT '{}'",
+          "size": "INTEGER DEFAULT 0",
+          "time_last_updated": "TEXT",
+          "favorite_status": "BOOLEAN DEFAULT 0",
+          "priority": "INTEGER DEFAULT 0",
+          "tags": "TEXT DEFAULT '[]'"
+        }
+      },
+      "Messages_Table": {
+        "Primary_key": "guid (TEXT)",
+        "Fields": {
+          "rowid": "INTEGER",
+          "body": "TEXT",
+          "phone_number": "TEXT",
+          "is_from_me": "BOOLEAN",
+          "cache_roomname": "TEXT",
+          "group_chat_name": "TEXT",
+          "timestamp": "INTEGER",
+          "service": "TEXT",
+          "account": "TEXT",
+          "chat_id": "TEXT",
+          "attributedBody": "BLOB",
+          "subject": "TEXT",
+          "country": "TEXT",
+          "error": "INTEGER",
+          "date_read": "INTEGER",
+          "date_delivered": "INTEGER",
+          "is_sent": "INTEGER",
+          "is_read": "INTEGER",
+          "has_attachments": "BOOLEAN DEFAULT 0",
+          "contact_id": "INTEGER",
+          "message_type": "TEXT",
+          "is_first_message": "INTEGER DEFAULT 0",
+          "is_last_message": "INTEGER DEFAULT 0",
+          "is_new": "INTEGER DEFAULT 0",
+          "source": "TEXT DEFAULT 'imessage'"
+        }
+      },
+      "Canvases_Table": {
+        "Primary_key": "canvas_id (TEXT)",
+        "Description": "Stores canvas definitions and layouts for visual relationship mapping",
+        "Fields": {
+          "canvas_id": "TEXT PRIMARY KEY",
+          "canvas_name": "TEXT NOT NULL",
+          "canvas_elements": "TEXT NOT NULL DEFAULT '[]'",
+          "element_counts": "TEXT NOT NULL DEFAULT '{}'",
+          "date_created": "TEXT NOT NULL",
+          "date_updated": "TEXT NOT NULL",
+          "last_saved": "TEXT",
+          "canvas_type": "TEXT NOT NULL DEFAULT 'group_map'",
+          "canvas_state": "TEXT DEFAULT '{}'",
+          "metadata": "TEXT DEFAULT '{}'"
+        },
+        "Element_Structure": {
+          "element_id": "String identifier for the element",
+          "element_type": "Type of element (contact, group, deck, custom)",
+          "location": "JSON object with x, y coordinates",
+          "scale": "Float scale factor",
+          "width": "Float width in points",
+          "height": "Float height in points",
+          "rotation": "Float rotation in radians",
+          "color": "Hex color string"
+        },
+        "Canvas_Types": {
+          "group_map": "Visual mapping of contact groups",
+          "deck_map": "Visual mapping of contact decks",
+          "contact_map": "Visual mapping of individual contacts",
+          "custom": "Custom canvas type"
+        },
+        "Indexes": {
+          "idx_canvases_id": "UNIQUE on canvas_id",
+          "idx_canvases_name": "INDEX on canvas_name",
+          "idx_canvases_type": "INDEX on canvas_type",
+          "idx_canvases_created": "INDEX on date_created",
+          "idx_canvases_updated": "INDEX on date_updated",
+          "idx_canvases_type_updated": "INDEX on canvas_type, date_updated"
+        }
+      },
+      "Invites_Table": {
+        "Primary_key": "id (TEXT UUID)",
+        "Description": "Stores invitations, actions, and to-do items sent or received by the user",
+        "Fields": {
+          "id": "TEXT PRIMARY KEY",
+          "title": "TEXT NOT NULL",
+          "description": "TEXT",
+          "creation_date": "TEXT NOT NULL",
+          "last_modified_date": "TEXT NOT NULL",
+          "date_completed": "TEXT",
+          "completed": "INTEGER DEFAULT 0",
+          "completion_status": "TEXT DEFAULT 'pending'",
+          "sent_received": "TEXT NOT NULL",
+          "to_phone": "TEXT",
+          "from_phone": "TEXT",
+          "priority": "INTEGER DEFAULT 1",
+          "due_date": "TEXT",
+          "parent_tasks": "TEXT DEFAULT '[]'",
+          "child_tasks": "TEXT DEFAULT '[]'",
+          "tags": "TEXT DEFAULT '{}'",
+          "groups": "TEXT DEFAULT '[]'",
+          "task_group": "TEXT DEFAULT '{}'",
+          "ai_processed": "INTEGER DEFAULT 0",
+          "ai_suggestions": "TEXT DEFAULT '{}'",
+          "ai_confidence": "REAL DEFAULT 0.0",
+          "reminder_date": "TEXT",
+          "message_origin_guid": "TEXT",
+          "is_recurring": "INTEGER DEFAULT 0",
+          "recurrence_type": "TEXT DEFAULT 'none'",
+          "next_task_id": "TEXT",
+          "previous_task_id": "TEXT",
+          "is_next_task": "INTEGER DEFAULT 0",
+          "date_of_last_task": "TEXT",
+          "created_by": "TEXT",
+          "assigned_to": "TEXT",
+          "category": "TEXT",
+          "location": "TEXT",
+          "estimated_duration": "INTEGER",
+          "attachments": "TEXT DEFAULT '[]'",
+          "external_id": "TEXT",
+          "last_ai_analysis": "TEXT"
+        },
+        "Recurrence_Types": {
+          "none": "No recurrence",
+          "daily": "Daily recurrence",
+          "weekly": "Weekly recurrence",
+          "monthly": "Monthly recurrence",
+          "monthly-by-week": "Monthly by week recurrence",
+          "yearly": "Yearly recurrence",
+          "yearly-by-month-week": "Yearly by month and week recurrence"
+        },
+        "Priority_Levels": {
+          "1": "Low priority",
+          "2": "Medium priority",
+          "3": "High priority",
+          "4": "Urgent priority",
+          "5": "Critical priority"
+        },
+        "Completion_Status": {
+          "pending": "Task is pending",
+          "in_progress": "Task is in progress",
+          "completed": "Task is completed",
+          "cancelled": "Task is cancelled",
+          "deferred": "Task is deferred",
+          "expired": "Task has expired"
+        },
+        "Indexes": {
+          "idx_invites_id": "UNIQUE on id",
+          "idx_invites_to_phone": "INDEX on to_phone",
+          "idx_invites_from_phone": "INDEX on from_phone",
+          "idx_invites_creation_date": "INDEX on creation_date",
+          "idx_invites_due_date": "INDEX on due_date",
+          "idx_invites_completed": "INDEX on completed",
+          "idx_invites_priority": "INDEX on priority",
+          "idx_invites_sent_received": "INDEX on sent_received",
+          "idx_invites_message_origin": "INDEX on message_origin_guid",
+          "idx_invites_recurring": "INDEX on is_recurring",
+          "idx_invites_next_task": "INDEX on is_next_task"
+        }
+      }
+    },
+
+    "Canvas_Management": {
+      "Canvas_Repository": {
+        "Database_Backed": {
+          "Persistent_storage": true,
+          "CRUD_operations": true,
+          "Element_management": true,
+          "Search_functionality": true
+        },
+        "Update_Service": {
+          "Real_time_updates": true,
+          "Debounced_saves": true,
+          "Batch_operations": true,
+          "Error_handling": true
+        },
+        "Conversion_Utilities": {
+          "ContactNode_to_CanvasElement": true,
+          "GroupCircle_to_CanvasElement": true,
+          "Database_format_conversion": true
+        }
+      },
+      "Canvas_Operations": {
+        "Create_Canvas": "Create new canvas with specified type and initial state",
+        "Load_Canvas": "Load existing canvas from database",
+        "Save_Canvas": "Save canvas changes with debounced updates",
+        "Delete_Canvas": {
+          "Description": "Remove canvas and all associated elements",
+          "Methods": [
+            "Swipe-to-delete: Swipe left on canvas row and confirm deletion",
+            "Keyboard delete: Select canvas and press Delete/Backspace key"
+          ]
+        },
+        "Add_Element": "Add new element to canvas",
+        "Update_Element": "Update existing element properties",
+        "Remove_Element": "Remove element from canvas",
+        "Update_Positions": "Batch update element positions",
+        "Update_State": "Update canvas view state (zoom, pan, etc.)"
+      },
+      "Performance_Optimizations": {
+        "Debounced_updates": "0.5 second debounce for UI changes",
+        "Batch_operations": "Group multiple element updates",
+        "Indexed_queries": "Fast retrieval by canvas type and date",
+        "JSON_storage": "Efficient storage of complex element data"
+      }
+    },
+
+    "Invites_Management": {
+      "Purpose": "Manage invitations, actions, and to-do items sent or received by the user with AI assistance",
+      "Primary_Views": {
+        "InvitesListPanel": {
+          "Virtualized_list": true,
+          "Filter_options": {
+            "Status": ["pending", "in_progress", "completed", "cancelled", "deferred", "expired"],
+            "Priority": [1, 2, 3, 4, 5],
+            "Sent_Received": ["sent", "received"],
+            "Recurring": [true, false],
+            "Due_date_range": "Date picker",
+            "Contact": "Phone number or name search"
+          },
+          "Search": {
+            "Fuzzy": true,
+            "Debounce_ms": 200,
+            "Targets": ["Title", "Description", "Contact names", "Tags"]
+          },
+          "Row_Content": ["Priority indicator", "Title", "Contact name", "Due date", "Status badge", "AI processed indicator"],
+          "Row_Actions": ["Mark complete", "Edit", "Duplicate", "Delete", "Set reminder", "View AI suggestions"],
+          "Keyboard": {"Up/Down": "Navigate", "Enter": "Open details", "Cmd+F": "Focus search", "Space": "Toggle completion"}
+        },
+        "InviteDetailsPanel": {
+          "Header": ["Title editable", "Priority control (1-5)", "Status dropdown", "Due date picker", "Reminder date picker"],
+          "Content_Sections": {
+            "Description": "Rich text editor",
+            "Contact_Info": ["To/From contact details", "Quick contact lookup"],
+            "Task_Hierarchy": ["Parent tasks display", "Child tasks list", "Add/remove parent-child relationships"],
+            "Recurrence": ["Recurrence type selector", "Next/previous task navigation", "Recurrence pattern editor"],
+            "AI_Analysis": ["AI suggestions display", "Confidence score", "Last analysis timestamp", "Re-analyze button"],
+            "Metadata": ["Tags editor", "Groups assignment", "Task group selection", "Category selection", "Location field"],
+            "Attachments": ["File attachments list", "Add/remove attachments", "External ID field"]
+          },
+          "Actions": ["Save changes", "Mark complete", "Set reminder", "Duplicate", "Delete", "Export to calendar"]
+        }
+      },
+      "AI_Integration": {
+        "Message_Analysis": {
+          "Auto_detection": "Scan incoming messages for potential invitations/tasks",
+          "Context_extraction": "Extract key information (title, due date, priority, contacts)",
+          "Confidence_scoring": "Rate AI analysis confidence (0.0-1.0)",
+          "Suggestion_generation": "Provide actionable suggestions for task management"
+        },
+        "Smart_Features": {
+          "Auto_categorization": "Categorize invites based on content analysis",
+          "Priority_suggestion": "Suggest priority levels based on urgency indicators",
+          "Due_date_inference": "Extract or suggest due dates from natural language",
+          "Contact_matching": "Match phone numbers to existing contacts",
+          "Recurrence_detection": "Identify recurring patterns in messages"
+        },
+        "Learning_System": {
+          "User_feedback": "Learn from user corrections and preferences",
+          "Pattern_recognition": "Improve suggestions based on user behavior",
+          "Context_awareness": "Consider user's communication patterns and preferences"
+        }
+      },
+      "Recurring_Tasks": {
+        "Recurrence_Types": {
+          "none": "No recurrence",
+          "daily": "Daily recurrence",
+          "weekly": "Weekly recurrence",
+          "monthly": "Monthly recurrence",
+          "monthly-by-week": "Monthly by week recurrence",
+          "yearly": "Yearly recurrence",
+          "yearly-by-month-week": "Yearly by month and week recurrence"
+        },
+        "Task_Chains": {
+          "Next_task_linking": "Link to next occurrence in series",
+          "Previous_task_linking": "Link to previous occurrence in series",
+          "Completion_propagation": "Update series when individual tasks complete",
+          "Series_management": "Edit entire series or individual occurrences"
+        }
+      },
+      "Interactions": {
+        "Drag_and_Drop": {
+          "From_messages_to_invites": "Create invite from message",
+          "Between_contacts_and_invites": "Assign contacts to invites",
+          "Priority_reordering": "Reorder by priority via drag",
+          "Drag_feedback": ["Ghost", "Drop highlight", "Invalid drop shake"]
+        },
+        "Context_Menus": {
+          "Invite_row": ["Mark complete", "Edit", "Duplicate", "Delete", "Set reminder", "View AI suggestions"],
+          "Contact_field": ["Open contact", "Message contact", "Add to group"]
+        },
+        "Keyboard_Shortcuts": {
+          "Cmd+N": "New invite",
+          "Enter": "Open selected invite",
+          "Space": "Toggle completion status",
+          "Cmd+D": "Duplicate invite",
+          "Cmd+R": "Set reminder",
+          "Cmd+I": "View AI suggestions",
+          "Esc": "Clear selection/close picker"
+        }
+      },
+      "Empty_and_Error_States": {
+        "No_invites": "Show friendly CTA to create first invite or import from messages",
+        "No_ai_suggestions": "Prompt to enable AI analysis or check message content",
+        "Search_no_results": "Suggest clearing filters or creating a new invite",
+        "AI_analysis_failed": "Show retry option with error details"
+      },
+      "Performance": {
+        "Virtual_lists": true,
+        "Incremental_loading": true,
+        "Debounced_search": true,
+        "Batch_updates": true,
+        "AI_analysis_caching": true
+      },
+      "Persistence": {
+        "Auto_save_on_edit": true,
+        "Debounce_ms": 300,
+        "Audit_log": ["invite_created", "invite_completed", "priority_changed", "due_date_changed", "ai_analyzed"]
+      },
+      "Design": {
+        "Layout": ["Left: InvitesListPanel", "Right: InviteDetailsPanel"],
+        "Resizable_split": true,
+        "Remember_panel_widths": true,
+        "A11y": ["Readable sizes", "VoiceOver labels", "High-contrast focus rings"],
+        "Empty_state_illustrations": true,
+        "AI_indicators": "Visual indicators for AI-processed content"
+      }
+    },
+    "Data_Providers": {
+      "DataProvider_Protocol": {
+        "CRUD_operations": true,
+        "Async_support": true,
+        "Error_handling": true,
+        "Caching": true
+      },
+      "MockDataProvider": {
+        "Test_data": true,
+        "Sample_contacts": true,
+        "Sample_groups": true,
+        "Development_support": true
+      },
+      "CanvasRepository": {
+        "Canvas_state_persistence": true,
+        "Auto_save": true,
+        "Debounced_saving": true,
+        "State_restoration": true
+      }
+    },
+
+    "Group_Management": {
+      "Membership_Operations": {
+        "Add_contact_to_group": {
+          "Duplicate_prevention": true,
+          "Size_recalculation": true,
+          "Timestamp_update": true
+        },
+        "Remove_contact_from_group": {
+          "Safe_removal": true,
+          "Size_recalculation": true,
+          "Timestamp_update": true
+        },
+        "Bulk_operations": true
+      },
+      "JSON_Storage": {
+        "Groups_field_format": "{\"group_id\": group_id}",
+        "Participants_field_format": "{\"contact_id\": contact_id}",
+        "Tags_field_format": "[\"tag1\", \"tag2\"]"
+      }
+    }
+  },
+
+  "iMessage_Integration": {
+    "Server_Scraper": {
+      "Backend_System": {
+        "Python_scripts": true,
+        "Virtual_environment": true,
+        "Dependency_management": true,
+        "Process_monitoring": true
+      },
+      "Message_Processing": {
+        "Chat_db_access": {
+          "Read_only_access": true,
+          "Immutable_mode": true,
+          "Full_disk_access_required": true
+        },
+        "Message_parsing": {
+          "AttributedBody_parsing": true,
+          "Hidden_message_support": true,
+          "Group_chat_support": true,
+          "Attachment_detection": true
+        },
+        "Data_normalization": {
+          "Timestamp_conversion": true,
+          "Phone_number_normalization": true,
+          "Contact_matching": true
+        }
+      },
+      "Contact_Import": {
+        "macOS_Contacts": {
+          "Full_contact_data": true,
+          "Profile_photos": true,
+          "Multiple_phone_numbers": true,
+          "Email_addresses": true,
+          "Addresses": true,
+          "Birthdays": true,
+          "Notes": true
+        },
+        "Sync_strategy": {
+          "Prefer_macOS_data": true,
+          "Add_missing_data": true,
+          "Never_delete_existing": true
+        }
+      },
+      "Script_Management": {
+        "start.py": {
+          "Environment_setup": true,
+          "Script_ordering": true,
+          "Error_handling": true,
+          "Logging": true
+        },
+        "import_contacts.py": {
+          "Contact_synchronization": true,
+          "Schema_validation": true,
+          "Profile_photo_handling": true
+        },
+        "import_imessages.py": {
+          "Message_import": true,
+          "Incremental_updates": true,
+          "Contact_linking": true
+        },
+        "evaluate_date_of_first_contact.py": {
+          "First_message_detection": true,
+          "Contact_statistics": true,
+          "Primary_user_identification": true
+        }
+      }
+    },
+
+    "Database_Utilities": {
+      "DatabaseManager": {
+        "Universal_access": true,
+        "Schema_management": true,
+        "Connection_pooling": true,
+        "Error_handling": true
+      },
+      "Schema_Migration": {
+        "Automatic_updates": true,
+        "Backward_compatibility": true,
+        "Data_preservation": true,
+        "Column_addition": true
+      },
+      "Group_Membership_API": {
+        "update_group_membership": true,
+        "get_contact_groups": true,
+        "get_group_participants": true,
+        "Transaction_support": true
+      }
+    },
+
+    "Monitoring": {
+      "ChatDBMonitor": {
+        "File_system_monitoring": true,
+        "Change_detection": true,
+        "Automatic_processing": true,
+        "Background_threading": true
+      },
+      "Process_Management": {
+        "Graceful_shutdown": true,
+        "Signal_handling": true,
+        "PID_file_management": true,
+        "Resource_cleanup": true
+      }
+    }
+  },
+
+  "Canvas_Features": {
+    "Visual_Management": {
+      "Contact_Positioning": {
+        "Free_positioning": true,
+        "Grid_snap": true,
+        "Collision_detection": true,
+        "Auto_arrangement": true
+      },
+      "Group_Management": {
+        "Dynamic_sizing": true,
+        "Member_visualization": true,
+        "Overlap_handling": true,
+        "Quick_menu": true
+      },
+      "Selection_System": {
+        "Single_selection": true,
+        "Multi_selection": true,
+        "Marquee_selection": true,
+        "Keyboard_shortcuts": true
+      }
+    },
+
+    "Recently_Implemented_Features": {
+      "Right_Click_Context_Menu": {
+        "Implementation": "SwiftUI native .contextMenu modifier",
+        "Features": {
+          "Add_New_Group": "Creates group at center of view",
+          "Menu_Location": "Right-click anywhere on canvas",
+          "Integration": "Seamless with existing canvas interactions"
+        },
+        "Technical_Details": {
+          "Code_Location": "GroupsMapCanvas.swift",
+          "Method": "addNewGroup() creates GroupCircle at view center",
+          "State_Management": "Uses viewModel.addGroup() with proper state updates"
+        }
+      },
+
+      "Contact_Drag_and_Drop_Fix": {
+        "Problem_Identified": "UTType mismatch between Contact model and drag system",
+        "Solution": "Updated Contact.Transferable to use UTType.crmContactList",
+        "Implementation": {
+          "Contact_Model": "Updated transferRepresentation to use correct UTType",
+          "Canvas_Drop": "dropDestination(for: Contact.self) now works correctly",
+          "Conversion": "Contact objects properly converted to ContactNode for display"
+        },
+        "Technical_Details": {
+          "UTType_System": "Custom UTType.crmContactList defined in DragTypes.swift",
+          "Drop_Handling": "GroupsMapViewModel.addContactFromDrop() method",
+          "Debugging": "Added logging to verify drag and drop functionality"
+        }
+      },
+
+      "Mode_Switching_Enhancement": {
+        "Existing_Implementation": "V and H key handling already present in CanvasGestures.swift",
+        "Mode_States": {
+          "Selection_Mode": "V key - enables selection and marquee operations",
+          "Hand_Mode": "H key - enables panning and navigation",
+          "State_Management": "viewModel.isSelectionMode and viewModel.isHandMode"
+        },
+        "Technical_Details": {
+          "Key_Codes": "V = 9, H = 4 (UInt16 key codes)",
+          "State_Transitions": "Proper mode switching with state cleanup",
+          "Integration": "Seamless with existing gesture handling"
+        }
+      },
+
+      "Scroll_Wheel_Behaviors": {
+        "Implementation": "NSEvent.addLocalMonitorForEvents for .scrollWheel",
+        "Behaviors": {
+          "Regular_Scroll": "Pans view up/down and left/right",
+          "Cmd_Scroll": "Zooms in and out with sensitivity control",
+          "Shift_Scroll": "Pans view left and right (horizontal movement)"
+        },
+        "Technical_Details": {
+          "Event_Handling": "handleScrollWheel() method in GroupsMapCanvas.swift",
+          "Modifier_Detection": "event.modifierFlags.contains(.command/.shift)",
+          "Sensitivity": "Zoom delta: 0.01, Pan delta: 2.0 multiplier",
+          "Integration": "Uses existing viewModel.setZoom() and viewModel.panBy()"
+        },
+        "Code_Location": {
+          "Setup": "setupScrollWheelMonitoring() in GroupsMapCanvas.swift",
+          "Handler": "handleScrollWheel() method with modifier key logic"
+        }
+      },
+
+      "G_Key_Group_Add_Mode": {
+        "Dual_Functionality": {
+          "No_Selection": "Activates group add mode for click-to-place",
+          "With_Selection": "Creates group around selected items"
+        },
+        "Implementation_Details": {
+          "Key_Handling": "Added case 5 (G key) to CanvasGestures.swift",
+          "Mode_State": "Added viewModel.isGroupAddMode state",
+          "Smart_Behavior": "handleGKey() method determines action based on selection"
+        },
+        "Group_Creation_Logic": {
+          "Click_to_Place": "addGroupAtPosition() creates group at click location",
+          "Selection_Based": "createGroupFromSelection() calculates bounding box",
+          "Bounding_Box": "Calculates min/max coordinates of all selected items",
+          "Radius_Calculation": "Uses diagonal distance + padding for group size",
+          "Member_Assignment": "Automatically includes selected contacts as members"
+        },
+        "Technical_Details": {
+          "Canvas_Integration": "Modified handleCanvasTap() to check for group add mode",
+          "State_Management": "Proper mode switching with exitGroupAddMode()",
+          "Color_Assignment": "Uses ColorPalette.randomColor() for new groups",
+          "Selection_Cleanup": "Clears selection after group creation"
+        },
+        "Code_Locations": {
+          "ViewModel": "GroupsMapViewModel.swift - mode states and group creation methods",
+          "Gesture_Handler": "CanvasGestures.swift - handleGKey() method",
+          "Canvas_Logic": "GroupsMapCanvas.swift - modified tap handling"
+        }
+      },
+
+      "Enhanced_Escape_Key": {
+        "Behavior": "Context-aware escape key handling",
+        "Implementation": "Modified CanvasGestures.swift case 53 (Escape)",
+        "Logic": {
+          "Group_Add_Mode": "Exits group add mode and returns to selection mode",
+          "Normal_Mode": "Clears current selection"
+        }
+      }
+    },
+
+    "Implementation_Learnings": {
+      "SwiftUI_Best_Practices": {
+        "Context_Menus": "Use SwiftUI's native .contextMenu modifier instead of custom implementations",
+        "Event_Handling": "NSEvent.addLocalMonitorForEvents works well for global event capture",
+        "State_Management": "Proper mode state management prevents conflicts between different interaction modes",
+        "Memory_Management": "Avoid [weak self] in struct-based SwiftUI views; use regular closures"
+      },
+
+      "Technical_Challenges_Solved": {
+        "UTType_System": "Custom UTType definitions must match between drag source and drop destination",
+        "Scroll_Wheel_Integration": "Scroll wheel events require careful modifier key detection and sensitivity tuning",
+        "Mode_State_Management": "Proper cleanup and state transitions prevent mode conflicts",
+        "Coordinate_Transformation": "Canvas-to-view and view-to-canvas transformations work correctly with new features"
+      },
+
+      "Performance_Considerations": {
+        "Event_Monitoring": "NSEvent monitors are efficient and don't impact performance",
+        "State_Updates": "Debounced saves prevent excessive file I/O during rapid interactions",
+        "Memory_Usage": "Proper cleanup of event monitors and timers prevents memory leaks"
+      },
+
+      "Code_Organization": {
+        "Separation_of_Concerns": "Gesture handling in CanvasGestures.swift, state management in ViewModel",
+        "Method_Naming": "Clear, descriptive method names improve code maintainability",
+        "Error_Handling": "Graceful fallbacks and proper error states improve user experience"
+      },
+
+      "Build_System_Insights": {
+        "Swift_Package_Manager": "Build system handles dependencies and compilation efficiently",
+        "Warning_Management": "Swift 6 language mode warnings can be addressed incrementally",
+        "Deployment": "App bundle creation and installation process works smoothly"
+      }
+    },
+
+    "Interaction_System": {
+      "Drag_and_Drop": {
+        "Contact_to_group": true,
+        "Group_to_group": true,
+        "Visual_feedback": true,
+        "Drop_validation": true
+      },
+      "Keyboard_Shortcuts": {
+        "W_key": "Toggle navigation",
+        "V_key": "Selection mode",
+        "H_key": "Hand mode",
+        "G_key": "Group add mode (no selection) or create group from selection",
+        "Escape": "Clear selection or exit group add mode",
+        "Cmd_Plus": "Zoom in",
+        "Cmd_Minus": "Zoom out",
+        "Cmd_0": "Reset zoom",
+        "Cmd_D": "Duplicate selection",
+        "Delete": "Delete selection",
+        "Arrow_keys": "Nudge selection"
+      },
+      "Mouse_Interactions": {
+        "Left_click": "Select",
+        "Right_click": "Context menu",
+        "Double_click": "Edit",
+        "Scroll": "Pan view up/down and left/right",
+        "Cmd_Scroll": "Zoom in and out",
+        "Shift_Scroll": "Pan view left and right",
+        "Drag": "Move or select"
+      },
+      "Contact_Selection": {
+        "Regular_click": "Clear all other selections and select only the clicked contact",
+        "Command_click": "Toggle contact selection (add/remove from selection)",
+        "Shift_click": "Add contact to existing selection",
+        "Selection_behavior": "When a contact is selected without modifier keys, all other canvas elements (contacts and groups) are automatically deselected"
+      }
+    },
+
+    "Canvas_State": {
+      "Zoom_Management": {
+        "Current_zoom": "CGFloat",
+        "Zoom_limits": "0.02 to 3.0",
+        "Zoom_center": "Gesture location",
+        "Smooth_zoom": true
+      },
+      "Pan_Management": {
+        "Current_pan": "CGPoint",
+        "Pan_limits": "Based on content",
+        "Edge_scrolling": true,
+        "Smooth_panning": true
+      },
+      "Grid_System": {
+        "Grid_enabled": "Boolean",
+        "Grid_size": "4.0 to 32.0",
+        "Snap_to_grid": "Boolean",
+        "Grid_visualization": true
+      },
+      "Selection_State": {
+        "Selected_contacts": "Set<UUID>",
+        "Selected_groups": "Set<UUID>",
+        "Selection_mode": "Boolean",
+        "Hand_mode": "Boolean",
+        "Group_add_mode": "Boolean"
+      }
+    }
+  },
+
+  "Services": {
+    "DragDropManager": {
+      "Drag_operations": {
+        "Drag_start": true,
+        "Drag_update": true,
+        "Drag_end": true,
+        "Drop_validation": true
+      },
+      "Drop_targets": {
+        "Group_circles": true,
+        "Canvas_areas": true,
+        "Contact_nodes": true
+      }
+    },
+    "SelectionManager": {
+      "Selection_logic": {
+        "Single_select": true,
+        "Multi_select": true,
+        "Range_select": true,
+        "Invert_select": true
+      },
+      "Selection_persistence": true,
+      "Selection_events": true
+    },
+    "FuzzyMatcher": {
+      "Search_algorithm": "Fuzzy string matching",
+      "Search_targets": {
+        "Contact_names": true,
+        "Group_names": true,
+        "Phone_numbers": true,
+        "Email_addresses": true
+      },
+      "Search_options": {
+        "Case_insensitive": true,
+        "Partial_matching": true,
+        "Weighted_results": true
+      }
+    },
+    "HotkeyManager": {
+      "Global_shortcuts": true,
+      "Context_aware": true,
+      "Modifier_key_support": true,
+      "Shortcut_conflicts": "Handled"
+    }
+  },
+
+  "Settings_and_Preferences": {
+    "User_Settings": {
+      "Location": "~/Library/Application Support/My_CRM/User_Settings.json",
+      "Format": "JSON with pretty printing and sorted keys",
+      "Managed_by": "SettingsManager.shared in Core/Models/UserSettings.swift",
+      "Database_settings": {
+        "Database_path": "User selectable",
+        "Database_name": "Configurable",
+        "Auto_backup": true
+      },
+      "User_information": {
+        "User_name": "String",
+        "User_phone": "String",
+        "User_email": "String",
+        "Contact_picker": true
+      },
+      "Application_preferences": {
+        "Theme": "light/dark/system",
+        "Notifications": "Boolean",
+        "Auto_sync": "Boolean",
+        "Run_at_login": "Boolean"
+      }
+    },
+    "App_Settings": {
+      "Database_selection": {
+        "File_picker": true,
+        "Path_display": true,
+        "Validation": true
+      },
+      "Connectivity": {
+        "Backend_connection": true,
+        "Auto_connect": true,
+        "Connection_status": true
+      }
+    }
+  },
+
+  "Error_Handling": {
+    "Database_Errors": {
+      "Connection_failures": {
+        "User_dialog": "Database error dialog",
+        "Settings_redirect": true,
+        "Fallback_paths": true
+      },
+      "Schema_errors": {
+        "Automatic_fixes": true,
+        "Migration_support": true,
+        "Data_preservation": true
+      }
+    },
+    "Backend_Errors": {
+      "Process_failures": {
+        "Graceful_degradation": true,
+        "Retry_logic": true,
+        "User_notification": true
+      },
+      "Permission_errors": {
+        "Full_disk_access": "Required",
+        "Contact_access": "Required",
+        "User_guidance": true
+      }
+    },
+    "UI_Errors": {
+      "Validation_errors": true,
+      "Input_errors": true,
+      "State_errors": true
+    }
+  },
+
+  "Performance": {
+    "Optimization": {
+      "Lazy_loading": true,
+      "Debounced_operations": true,
+      "Background_processing": true,
+      "Memory_management": true
+    },
+    "Caching": {
+      "Contact_cache": true,
+      "Message_cache": true,
+      "Image_cache": true,
+      "State_cache": true
+    },
+    "Threading": {
+      "Main_thread_UI": true,
+      "Background_data_processing": true,
+      "Async_operations": true,
+      "Thread_safety": true
+    }
+  },
+
+  "Security": {
+    "Data_Protection": {
+      "Read_only_access": "To system databases",
+      "Sandbox_compliance": true,
+      "Permission_handling": true,
+      "Data_encryption": "At rest"
+    },
+    "Privacy": {
+      "Local_storage": true,
+      "No_cloud_sync": true,
+      "User_control": true,
+      "Data_ownership": "User retains all data"
+    }
+  },
+
+  "Build_and_Deployment": {
+    "Build_System": {
+      "Swift_Package_Manager": true,
+      "Xcode_project": true,
+      "Build_script": "build_app.sh",
+      "App_bundle_creation": true
+    },
+    "Distribution": {
+      "App_bundle": true,
+      "Code_signing": "Required for distribution",
+      "Notarization": "Required for distribution",
+      "Installation": "Drag to Applications"
+    },
+    "Development": {
+      "Hot_reload": true,
+      "Debug_support": true,
+      "Logging": true,
+      "Testing": true
+    }
+  },
+
+  "Testing": {
+    "Unit_Tests": {
+      "DragDropTests": true,
+      "FuzzyMatcherTests": true,
+      "Model_tests": true,
+      "Service_tests": true
+    },
+    "UI_Tests": {
+      "Launch_tests": true,
+      "Integration_tests": true,
+      "User_flow_tests": true
+    },
+    "Database_Tests": {
+      "Schema_tests": true,
+      "Migration_tests": true,
+      "Performance_tests": true
+    }
+  },
+
+  "Documentation": {
+    "Code_Documentation": {
+      "Inline_comments": true,
+      "Function_documentation": true,
+      "API_documentation": true,
+      "Architecture_diagrams": true
+    },
+    "User_Documentation": {
+      "Feature_guide": true,
+      "Installation_guide": true,
+      "Troubleshooting": true,
+      "FAQ": true
+    },
+    "Developer_Documentation": {
+      "Setup_guide": true,
+      "API_reference": true,
+      "Contributing_guide": true,
+      "Release_notes": true
+    }
+  },
+
+  "Future_Features": {
+    "Planned_Enhancements": {
+      "Cloud_sync": "Optional",
+      "Advanced_analytics": true,
+      "Export_functionality": true,
+      "Plugin_system": true,
+      "Mobile_companion": "Future consideration",
+      "AI_assistant": "Future consideration",
+      "Advanced_search": true,
+      "Custom_fields": true,
+      "Workflow_automation": true,
+      "Integration_APIs": true
+    }
+  }
+,
+
+  "Expanded_Project_Notes": {
+    "Project_Goals": [
+      "Build a macOS-native CRM (Customer Relationship Management) app tightly integrated with iMessage.",
+      "Provide a visual, drag-and-drop People Map ('Groups Map') interface for organizing contacts into groups.",
+      "Enable advanced automations and workflow tools for users to manage relationships, communications, and follow-ups.",
+      "Support robust contact management, including deduplication, merging, tagging, and relationship mapping.",
+      "Allow offline-first operation with all data stored locally; no required cloud sync.",
+      "Facilitate easy import and sync from macOS Messages, Contacts, and Google accounts."
+    ],
+    "Core_Architecture_Decisions": [
+      "macOS native app using SwiftUI for the frontend UI.",
+      "Backend logic and data processing in Python 3, running in a managed virtual environment.",
+      "SQLite database for local, persistent storage of all CRM data.",
+      "Offline-first: all features work without an internet connection; no forced cloud dependency.",
+      "Frontend and backend communicate via process execution and file-based messaging.",
+      "State management in SwiftUI uses MVVM, @Published properties, and Combine."
+    ],
+    "User_Context": [
+      "Primary user is Andrew Soulier; app is single-user oriented for now.",
+      "Contacts are identified by phone number, email address, and optionally Apple Contact ID.",
+      "User's own contact record is flagged in the database (is_primary_user)."
+    ],
+    "Contacts_and_Relationships_System": [
+      "Contacts table includes phone, email, Apple Contact ID, name, notes, and metadata.",
+      "Relationship tagging: contacts can be tagged with relationship types (e.g., friend, coworker).",
+      "Supports merging duplicate contacts based on phone/email/Apple Contact ID.",
+      "Events system: logs first/last message, total messages, and important relationship milestones.",
+      "Deduplication logic: never deletes existing data, prefers macOS Contacts data when available.",
+      "Contact groups are stored as JSON fields (see // JSON_Storage section above)."
+    ],
+    "Group_Maps_UI_Specifics": [
+      {"Canvas_Scope": "Central infinite canvas for arranging contacts into visual groups; no hard bounds but subtle edge fade when far from origin."},
+      {"Coordinate_System": {
+        "Space": "Canvas space is ground truth; view = (canvas * zoom) + pan",
+        "Utilities": ["canvasToView(point)", "viewToCanvas(point)"],
+        "Units": "Points (CGFloat) // macOS point units"
+      }},
+      {"Zoom": {
+        "min": 0.02,
+        "default": 1.0,
+        "max": 3.0,
+        "clamp_to_limits": true,
+        "gestures": ["Pinch to zoom", "Cmd+=", "Cmd+-", "Cmd+0 resets"],
+        "centered_on_pointer": true,
+        "smooth_zoom": true
+      }},
+      {"Pan": {
+        "gestures": ["Two-finger scroll", "Middle-mouse drag", "Spacebar + Left-drag (hand mode)"],
+        "edge_scrolling": {"threshold_px": 50, "max_speed_pps": 20, "frequency": "30fps"},
+        "inertia": "none",
+        "bounds": "infinite canvas; optional soft fade at distance"
+      }},
+      {"Scrolling": {
+        "default": "Scroll pans",
+        "cmd_scroll": "Zoom",
+        "shift_scroll": "Horizontal pan",
+        "natural_scrolling": "Respects system preference"
+      }},
+      {"Grid_and_Snap": {
+        "grid_visible": true,
+        "toggle_in_hud": true,
+        "grid_size_pt": {"min": 4, "default": 8, "max": 32},
+        "snap_to_grid": true,
+        "snap_applies_on": ["Drop", "Keyboard nudge complete"],
+        "preview_behavior": "Snap preview shown as dashed outline"
+      }},
+      {"Selection": {
+        "click": "Select topmost item (contacts above groups; recency tie-breaker).",
+        "shift_click": "Toggle in selection set.",
+        "cmd_click": "Toggle in selection set (macOS convention).",
+        "empty_click": "Clears selection.",
+        "marquee": {
+          "rectangular": true,
+          "intersection_rule": "Partial bounds intersection selects.",
+          "modifiers": {"Shift": "Add", "Option": "Subtract"}
+        },
+        "esc_key": "Clear selection",
+        "selection_visuals": ["Thickened border", "Glow", "Member count badge on groups"]
+      }},
+      {"Drag_and_Drop": {
+        "drag_handle": "Grab anywhere on node; cursor indicates draggability.",
+        "multi_drag": "Dragging any selected item moves the entire selection.",
+        "ghost_preview": "Semi-transparent with outline during drag.",
+        "drop_animation": "Spring to final (snapped) position.",
+        "edge_scroll_while_dragging": true,
+        "invalid_drop": "Revert with animation."
+      }},
+      {"Hit_Testing": {
+        "order": "Contacts > Groups",
+        "within_layer": "Most recently interacted item wins on overlap",
+        "tolerance_px": 2
+      }},
+      {"Group_Circles": {
+        "create": "Toolbar 'New Group' then click to place or click-drag to set initial radius.",
+        "resize": "Drag edge; Shift resizes from center proportionally.",
+        "membership_rule": "A contact becomes a member when its CENTER ends inside the circle on drop; removed when CENTER ends outside on drop.",
+        "hover_feedback": "Groups under a dragging contact highlight.",
+        "visuals": ["Circle behind contacts", "Low-opacity fill tinted by group color", "Thicker colored stroke when selected"]
+      }},
+      {"Contact_Nodes": {
+        "visual": {
+          "avatar": "Rounded square; scales with zoom (1:3 ratio).",
+          "label": "Name below avatar; truncates with ellipsis.",
+          "status": ["Optional badges", "Hover lift/shadow"]
+        },
+        "interaction": ["Click select", "Drag move", "Context menu on right-click"]
+      }},
+      {"Z_Order": {
+        "layers": "Groups (back) -> Contacts (front).",
+        "on_select": "Raise zIndex for visuals without reordering data arrays.",
+        "commands": {"groups_only_optional": ["Bring to Front", "Send to Back"]}
+      }},
+      {"Keyboard_Shortcuts": {
+        "navigation": {"W": "Toggle main navigation column"},
+        "edit": {
+          "Cmd+D": "Duplicate selection with slight offset",
+          "Delete": "Delete with confirm for groups",
+          "Arrows": "Nudge by 1pt",
+          "Shift+Arrows": "Nudge by 10pt"
+        },
+        "zoom": {"Cmd+=": "Zoom in", "Cmd+-": "Zoom out", "Cmd+0": "Reset"}
+      }},
+      {"Context_Menus": {
+        "contact": ["Open details", "Add/Remove from Group (nearby list)", "Duplicate", "Delete"],
+        "group": ["Rename", "Change Color", "Duplicate", "Delete"]
+      }},
+      {"HUD_and_Overlays": {
+        "HUD": ["Zoom controls", "Grid toggle", "Mode indicators (hand/selection)", "Status info"],
+        "Marquee": ["Translucent rectangle", "Live count of selected items"]
+      }},
+      {"Accessibility": {
+        "labels": "Contacts and groups expose accessibility labels (name/type/position).",
+        "keyboard_parity": ["Tab/Shift+Tab to cycle focus", "Space toggles selection", "Enter enters keyboard-drag mode", "Esc cancels"]
+      }},
+      {"Persistence": {
+        "what_saves": ["Node positions", "Group radii", "Membership", "Zoom", "Pan", "Grid + snap flags"],
+        "when": "Debounced save (≈300ms) after meaningful changes",
+        "repository": "CanvasRepository protocol with load/save hooks"
+      }},
+      {"Performance": {
+        "rendering": "Avoid re-render storms; prefer @StateObject view models and computed drawing.",
+        "hit_testing": "O(N log N) preferred; spatial hashing/quadtree future-ready.",
+        "throttling": "Throttle heavy math to <= 60Hz"
+      }},
+      {"Undo_Redo": {
+        "actions": ["Create", "Move", "Resize", "Delete", "Membership change"],
+        "shortcuts": ["Cmd+Z", "Shift+Cmd+Z"]
+      }},
+      {"Animations": {
+        "move_drop": "Subtle spring; low bounciness",
+        "hover": "Opacity/scale micro-animations",
+        "durations_ms": {"default": 200, "marquee_update": 16}
+      }},
+      {"Error_Guards": {
+        "min_group_radius_pt": 8,
+        "min_drag_delta_pt": 1,
+        "clamp_zoom_pan": true,
+        "ignore_noisy_events": "Debounce tiny drags and high-frequency jitter"
+      }},
+      {"Testing_and_Acceptance": {
+        "unit_tests": [
+          "Transform round-trip canvasToView/viewToCanvas within epsilon",
+          "Selection rules (click/shift/cmd/marquee)",
+          "Membership enter/leave by center-in-circle",
+          "Snap math rounding to grid centers"
+        ],
+        "manual_checklist": [
+          "Pinch zoom centered under pointer; clamps [0.02, 3.0]; Cmd+0 resets",
+          "Two-finger scroll pans; Space+drag pans; middle-mouse pans",
+          "Marquee add/subtract with Shift/Option",
+          "Drag selection moves together; edge scroll works",
+          "Snap on drop and on completed nudges",
+          "Create/resize groups; membership updates correctly; hover highlight works",
+          "Undo/redo for create/move/resize/delete/membership"
+        ]
+      }},
+      {"Terminology_Notes": [
+        "'People Maps' == 'Groups Map' (same feature).",
+        "'Sandbox' = central canvas for arranging contacts and groups.",
+        "'Deck Builder' shares the same underlying group/membership data but renders as stacks."
+      ]}
+    ],
+    "Automations_Manager_Page": [
+      "Dedicated Automations Manager page for creating, editing, and running automation blocks.",
+      "Block types include: send message, schedule follow-up, assign tag, trigger event, run script, move contact, create group, merge contacts, update field, custom Python script, and more.",
+      "Execution model: blocks can be run manually, scheduled, or triggered by events (e.g., new message, contact added).",
+      "Block chaining: users can connect blocks to create multi-step workflows.",
+      "Automation history and undo/redo support."
+    ],
+    "Sync_and_Import_System": [
+      "Syncs with macOS Messages (iMessage) database using read-only access. // Full disk access required",
+      "Imports from macOS Contacts, including all fields, profile photos, and multiple identifiers.",
+      "Supports Google Contacts and Google Messages import via OAuth and API integration. // Planned for future version",
+      "Import logic prefers adding missing data and never deletes user data.",
+      "Timestamps use Apple UTC epoch (seconds since 2001-01-01) for compatibility. // Apple UTC = Apple stores timestamps in seconds since 2001-01-01 UTC"
+    ],
+    "Design_Requirements": [
+      "Status bar icon for quick access and status display.",
+      "Navigation columns feature gradient backgrounds; each collapsed bar is 5% darker.",
+      "Hotkeys for all major actions (toggle nav, selection, hand mode, zoom, duplicate, delete, etc.).",
+      "Collapsible sections in navigation and workspace for space efficiency.",
+      "Responsive design and minimum window size enforced (720x480).",
+      "Visual feedback for drag-and-drop and selection."
+    ],
+    "Performance_Persistence_and_UndoRedo": [
+      "Optimized for performance: lazy loading, background processing, debounced saves.",
+      "State persistence for canvas (positions, groupings, selections) with auto-save and debounced saving.",
+      "Full undo/redo stack for all major operations (add, delete, move, group, tag, automation).",
+      "Caching for contacts, messages, images, and state."
+    ],
+    "Future_Planned_Features": [
+      "Mobile companion app (iOS) for on-the-go contact management and sync. // Not yet implemented",
+      "AI assistant for relationship recommendations, smart search, and auto-tagging. // Planned for future",
+      "Cloud sync option for multi-device support (optional, user-controlled).",
+      "Plugin system for extensibility.",
+      "Advanced analytics and reporting.",
+      "Custom fields and workflow automation builder."
+    ],
+    "Commentary_and_Explanations": [
+      // --- Groups Management Page Spec ---
+    ],
+    "Groups_Management_Page_Spec": {
+      "Data_Model": {
+        "Group": {"id": "INT PK", "name": "TEXT", "color": "HEX or system Color name", "favorite": "BOOL", "priority": "INT 0-5", "tags": "JSON []", "size": "INT computed", "time_last_updated": "INTEGER // Apple UTC"},
+        "GroupMembership": {"group_id": "INT", "contact_id": "INT", "added_at": "INTEGER // Apple UTC", "added_by": "TEXT optional"}
+      },
+      "Backend_APIs": {
+        "list_groups": {"params": {"q": "string?", "filters": "json?", "sort": "enum"}, "returns": "[Group]"},
+        "get_group_members": {"params": {"group_id": "int"}, "returns": "[Contact]"},
+        "add_members": {"params": {"group_id": "int", "contact_ids": "[int]"}, "tx": true},
+        "remove_members": {"params": {"group_id": "int", "contact_ids": "[int]"}, "tx": true},
+        "update_group": {"params": {"group_id": "int", "name|color|favorite|priority|tags": "fields"}},
+        "bulk_create_from_names_or_numbers": {"params": {"group_id": "int", "raw": "string multi-line"}, "behavior": "match → create new contacts if policy enabled"}
+      },
+      "Validation_and_Policies": {
+        "Duplicate_members": "Prevent duplicates at DB with UNIQUE(group_id, contact_id)",
+        "Delete_group_policy": "If group deleted, memberships cascade (ON DELETE CASCADE)",
+        "Creation_rules": "Group name required, min length 1, unique per user (case-insensitive)",
+        "Limits": {"max_members_per_op": 2000, "max_tags_per_group": 50}
+      },
+      "Telemetry": ["time_to_first_result", "search_zero_results_rate", "bulk_add_count", "undo_usage"],
+      "Testing_Checklist": [
+        "Search returns fuzzy matches with debounce",
+        "Bulk add validates and previews matches",
+        "Undo/redo for add/remove members",
+        "Deleting a contact removes it from groups",
+        "Permissions errors surfaced with guidance",
+        "Virtualized lists remain smooth at 25k members"
+      ],
+      "Copy_and_Microtext": [
+        "\"No contacts yet\" empty state",
+        "\"Drag contacts here\" drop zone hint",
+        "\"Removed from group\" toast with Undo"
+      ]
+    }
+      "// QDF = Query Deserved Freshness ranking, affects search recency and prioritization.",
+      "// Apple UTC = Apple stores timestamps in seconds since 2001-01-01 UTC.",
+      "// All JSON fields (groups, participants, tags) are stored as encoded strings in SQLite.",
+      "// 'is_primary_user' field marks the user's own contact record.",
+      "// Deck builder = area for assembling, saving, and restoring group arrangements on the canvas.",
+      "// Block types in Automations Manager can be extended with custom Python scripts.",
+      "// No cloud sync by default; user retains full ownership and control of data.",
+      "// Full disk access and Contacts permission required for iMessage and Contacts import.",
+      "// Recent Implementation (2025): Added right-click context menu, fixed contact drag and drop, enhanced scroll wheel behaviors, and implemented G key group add mode.",
+      "// Hotkey Fixes (January 2025): Fixed Shift+Scroll horizontal panning, Option+Click selection, default canvas mode to selection, and spacebar terminal bell sounds.",
+      "// UTType.crmContactList is the custom uniform type identifier for drag and drop operations.",
+      "// Group add mode allows click-to-place group creation and smart group creation around selected items."
+    ]
+  }
+}

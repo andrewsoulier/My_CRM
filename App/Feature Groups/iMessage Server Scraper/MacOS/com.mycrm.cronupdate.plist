@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>com.mycrm.cronupdate</string>
+
+    <key>ProgramArguments</key>
+    <array>
+      <string>/Users/andrewsoulier/My_CRM Project/My CRM/App/Feature Groups/iMessage Server Scraper/MacOS/cron_update.sh</string>
+    </array>
+
+    <key>StartInterval</key>
+    <integer>90</integer>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/andrewsoulier/My_CRM Project/My CRM/App/Feature Groups/iMessage Server Scraper/MacOS</string>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/crm_cron_stdout.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/crm_cron_stderr.log</string>
+
+    <key>KeepAlive</key>
+    <false/>
+
+    <key>ProcessType</key>
+    <string>Background</string>
+  </dict>
+</plist>

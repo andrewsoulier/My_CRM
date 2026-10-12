@@ -1,0 +1,1491 @@
+{
+  "database_name": "my_crm.db",
+  "version": "1.1.0",
+  "description": "Core database schema for My CRM application - Contact Relationship Management system with iMessage integration",
+  "created_date": "2024-12-19",
+  "last_updated": "2025-11-11",
+  "database_type": "SQLite",
+  "tables": {
+    "contacts": {
+      "description": "Primary contact information table storing all contact details",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTOINCREMENT"],
+          "description": "Unique internal identifier for each contact"
+        },
+        {
+          "name": "phone",
+          "type": "TEXT",
+          "constraints": ["UNIQUE", "NOT NULL"],
+          "description": "Primary phone number used as business key for contact identification"
+        },
+        {
+          "name": "name",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Full display name of the contact"
+        },
+        {
+          "name": "nickname",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Preferred nickname used for the contact in grid views"
+        },
+        {
+          "name": "first_name",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Contact's first name"
+        },
+        {
+          "name": "last_name",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Contact's last name"
+        },
+        {
+          "name": "email",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Primary email address"
+        },
+        {
+          "name": "address",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Physical address information"
+        },
+        {
+          "name": "notes",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Additional notes and comments about the contact"
+        },
+        {
+          "name": "creation_date",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Date when contact was first created in the system"
+        },
+        {
+          "name": "business",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Company or organization name"
+        },
+        {
+          "name": "contact_group",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Legacy group assignment (deprecated - use groups table)"
+        },
+        {
+          "name": "birthday",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Contact's birthday in YYYY-MM-DD format"
+        },
+        {
+          "name": "apple_contact_id",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Apple Contacts framework identifier for sync purposes"
+        },
+        {
+          "name": "profile_photo",
+          "type": "BLOB",
+          "constraints": [],
+          "description": "Contact's profile picture stored as binary data"
+        },
+        {
+          "name": "first_message_date",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Date of first iMessage communication with this contact"
+        },
+        {
+          "name": "last_message_date",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Date of most recent iMessage communication"
+        },
+        {
+          "name": "last_message_sent_date",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Date when the primary user last sent a message to this contact"
+        },
+        {
+          "name": "last_message_received_date",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Date when the primary user last received a message from this contact"
+        },
+        {
+          "name": "total_messages",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Total number of messages exchanged with this contact"
+        },
+        {
+          "name": "messages_sent",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Number of messages sent to this contact"
+        },
+        {
+          "name": "messages_received",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Number of messages received from this contact"
+        },
+        {
+          "name": "is_primary_user",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Boolean flag indicating if this contact is the primary user (1) or not (0)"
+        },
+        {
+          "name": "sent_last_message",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Boolean flag indicating if the primary user sent the last message (1) or received it (0)"
+        },
+        {
+          "name": "groups",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of group UUIDs the contact belongs to for quick grid rendering"
+        },
+        {
+          "name": "tag_ids",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of Tag UUIDs associated with this contact"
+        },
+        {
+          "name": "relationship_ids",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of Relationship UUIDs associated with this contact"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_contacts_phone",
+          "columns": ["phone"],
+          "type": "UNIQUE"
+        },
+        {
+          "name": "idx_contacts_apple_id",
+          "columns": ["apple_contact_id"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_contacts_name",
+          "columns": ["name"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_contacts_business",
+          "columns": ["business"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_contacts_creation_date",
+          "columns": ["creation_date"],
+          "type": "INDEX"
+        }
+      ]
+    },
+    "grid_views": {
+      "description": "Saved grid view presets and user column preferences",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTOINCREMENT"],
+          "description": "Internal identifier"
+        },
+        {
+          "name": "uuid",
+          "type": "TEXT",
+          "constraints": ["UNIQUE", "NOT NULL"],
+          "description": "Stable UUID for referencing this view from the UI"
+        },
+        {
+          "name": "name",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "User facing name for the view preset"
+        },
+        {
+          "name": "entity_type",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Type of records rendered by the view (contacts | groups)"
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "constraints": ["NOT NULL", "DEFAULT 'default'"],
+          "description": "Owner of the view preset"
+        },
+        {
+          "name": "visible_columns",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of column identifiers shown in this view"
+        },
+        {
+          "name": "frozen_columns",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of column identifiers that remain frozen on the left edge"
+        },
+        {
+          "name": "column_order",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array describing the order of all columns"
+        },
+        {
+          "name": "sort_model",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of sort descriptors (column + direction)"
+        },
+        {
+          "name": "filter_model",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '{}'"],
+          "description": "JSON object describing active filters"
+        },
+        {
+          "name": "created_at",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "ISO 8601 timestamp when the view was created"
+        },
+        {
+          "name": "updated_at",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "ISO 8601 timestamp when the view was last updated"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_grid_views_uuid",
+          "columns": ["uuid"],
+          "type": "UNIQUE"
+        },
+        {
+          "name": "idx_grid_views_user_entity",
+          "columns": ["user_id", "entity_type"],
+          "type": "INDEX"
+        }
+      ]
+    },
+    "grid_custom_columns": {
+      "description": "Metadata for user-defined custom columns rendered in the grid",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTOINCREMENT"],
+          "description": "Internal identifier"
+        },
+        {
+          "name": "uuid",
+          "type": "TEXT",
+          "constraints": ["UNIQUE", "NOT NULL"],
+          "description": "Stable UUID used in the UI and cell data rows"
+        },
+        {
+          "name": "view_uuid",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Optional reference to the owning grid view preset"
+        },
+        {
+          "name": "entity_type",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Entity this column applies to (contacts | groups)"
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "constraints": ["NOT NULL", "DEFAULT 'default'"],
+          "description": "Owner of the custom column"
+        },
+        {
+          "name": "name",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Display name for the column header"
+        },
+        {
+          "name": "data_type",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Column type (text, number, date, phone, email, smartchip)"
+        },
+        {
+          "name": "is_visible",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 1"],
+          "description": "Boolean stored as 0/1 indicating visibility"
+        },
+        {
+          "name": "order_index",
+          "type": "INTEGER",
+          "constraints": [],
+          "description": "Preferred ordering index within the grid"
+        },
+        {
+          "name": "created_at",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "ISO 8601 timestamp when the column was created"
+        },
+        {
+          "name": "updated_at",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "ISO 8601 timestamp when the column metadata was last updated"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_grid_custom_columns_uuid",
+          "columns": ["uuid"],
+          "type": "UNIQUE"
+        },
+        {
+          "name": "idx_grid_custom_columns_view",
+          "columns": ["view_uuid"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_grid_custom_columns_user_entity",
+          "columns": ["user_id", "entity_type"],
+          "type": "INDEX"
+        }
+      ]
+    },
+    "grid_custom_cell_values": {
+      "description": "Per-record values for user-defined custom columns",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTOINCREMENT"],
+          "description": "Internal identifier"
+        },
+        {
+          "name": "column_uuid",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Reference to grid_custom_columns.uuid"
+        },
+        {
+          "name": "record_id",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "ID of the record (contact or group) as stored in the database"
+        },
+        {
+          "name": "entity_type",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Entity type for the record (contacts | groups)"
+        },
+        {
+          "name": "value",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Serialized value for the custom column cell"
+        },
+        {
+          "name": "updated_at",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "ISO 8601 timestamp when the value was last updated"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_grid_custom_cell_values_column_record",
+          "columns": ["column_uuid", "record_id"],
+          "type": "UNIQUE"
+        },
+        {
+          "name": "idx_grid_custom_cell_values_entity",
+          "columns": ["entity_type", "record_id"],
+          "type": "INDEX"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "column_uuid",
+          "references": {
+            "table": "grid_custom_columns",
+            "column": "uuid"
+          },
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE"
+        }
+      ]
+    },
+    "grid_edit_log": {
+      "description": "Session-scoped undo/redo stack entries for grid edits",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTOINCREMENT"],
+          "description": "Internal identifier"
+        },
+        {
+          "name": "session_id",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Identifier for the current Grid View editing session"
+        },
+        {
+          "name": "entity_type",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Entity affected by the edit (contacts | groups)"
+        },
+        {
+          "name": "record_id",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "ID of the record impacted by the edit"
+        },
+        {
+          "name": "column_id",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Identifier of the column that changed (system column key or custom column UUID)"
+        },
+        {
+          "name": "previous_value",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Serialized value before the change"
+        },
+        {
+          "name": "next_value",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Serialized value after the change"
+        },
+        {
+          "name": "created_at",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Timestamp when the edit was recorded"
+        },
+        {
+          "name": "direction",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Whether entry is pending undo or redo"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_grid_edit_log_session",
+          "columns": ["session_id", "created_at"],
+          "type": "INDEX"
+        }
+      ]
+    },
+    "messages": {
+      "description": "iMessage communication history and metadata",
+      "columns": [
+        {
+          "name": "guid",
+          "type": "TEXT",
+          "constraints": ["PRIMARY KEY"],
+          "description": "Unique message identifier from Apple's Messages database"
+        },
+        {
+          "name": "rowid",
+          "type": "INTEGER",
+          "constraints": [],
+          "description": "Original row ID from Apple's Messages database"
+        },
+        {
+          "name": "body",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Message content text"
+        },
+        {
+          "name": "phone_number",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Phone number of the contact involved in the message"
+        },
+        {
+          "name": "is_from_me",
+          "type": "BOOLEAN",
+          "constraints": ["DEFAULT 0"],
+          "description": "Boolean indicating if message was sent by primary user (1) or received (0)"
+        },
+        {
+          "name": "cache_roomname",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Cached room name for group chats"
+        },
+        {
+          "name": "group_chat_name",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Name of group chat if applicable"
+        },
+        {
+          "name": "timestamp",
+          "type": "INTEGER",
+          "constraints": [],
+          "description": "Unix timestamp of when message was sent/received"
+        },
+        {
+          "name": "service",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Message service (iMessage, SMS, etc.)"
+        },
+        {
+          "name": "account",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Account identifier for the message"
+        },
+        {
+          "name": "chat_id",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Chat identifier for grouping messages"
+        },
+        {
+          "name": "attributedBody",
+          "type": "BLOB",
+          "constraints": [],
+          "description": "Raw attributed body data from Apple's database"
+        },
+        {
+          "name": "subject",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Message subject line if applicable"
+        },
+        {
+          "name": "country",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Country code for the message"
+        },
+        {
+          "name": "error",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Error code if message failed to send"
+        },
+        {
+          "name": "date_read",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Timestamp when message was read"
+        },
+        {
+          "name": "date_delivered",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Timestamp when message was delivered"
+        },
+        {
+          "name": "is_sent",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Boolean indicating if message was successfully sent"
+        },
+        {
+          "name": "is_read",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Boolean indicating if message has been read"
+        },
+        {
+          "name": "has_attachments",
+          "type": "BOOLEAN",
+          "constraints": ["DEFAULT 0"],
+          "description": "Boolean indicating if message contains attachments"
+        },
+        {
+          "name": "contact_id",
+          "type": "INTEGER",
+          "constraints": [],
+          "description": "Foreign key reference to contacts.id"
+        },
+        {
+          "name": "message_type",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Type of message (text, image, video, etc.)"
+        },
+        {
+          "name": "is_first_message",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Boolean indicating if this is the first message with this contact"
+        },
+        {
+          "name": "is_last_message",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Boolean indicating if this is the most recent message with this contact"
+        },
+        {
+          "name": "is_new",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Boolean indicating if this is a new unprocessed message"
+        },
+        {
+          "name": "source",
+          "type": "TEXT",
+          "constraints": ["DEFAULT 'imessage'"],
+          "description": "Source of the message (imessage, sms, etc.)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_messages_guid",
+          "columns": ["guid"],
+          "type": "UNIQUE"
+        },
+        {
+          "name": "idx_messages_phone_number",
+          "columns": ["phone_number"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_messages_timestamp",
+          "columns": ["timestamp"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_messages_contact_id",
+          "columns": ["contact_id"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_messages_chat_id",
+          "columns": ["chat_id"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_messages_is_from_me",
+          "columns": ["is_from_me"],
+          "type": "INDEX"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "contact_id",
+          "references": {
+            "table": "contacts",
+            "column": "id"
+          },
+          "on_delete": "SET NULL",
+          "on_update": "CASCADE"
+        }
+      ]
+    },
+    "groups": {
+      "description": "Contact groups for organizing and categorizing contacts",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "constraints": ["PRIMARY KEY"],
+          "description": "UUID string identifier for the group"
+        },
+        {
+          "name": "name",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Display name of the group"
+        },
+        {
+          "name": "color",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Hex color code for group visualization"
+        },
+        {
+          "name": "size",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Cached member count maintained by services for fast lookup"
+        },
+        {
+          "name": "created_at",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "ISO 8601 timestamp of group creation"
+        },
+        {
+          "name": "parent_id",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "UUID of parent group for hierarchical organization"
+        },
+        {
+          "name": "member_phones",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "JSON array of phone numbers belonging to this group"
+        },
+        {
+          "name": "linked_group_ids",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "JSON array of UUIDs for linked groups"
+        },
+        {
+          "name": "metadata",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "JSON object containing auxiliary group metadata (invite_count, interconnectivity_score, etc.)"
+        },
+        {
+          "name": "is_deck",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Boolean flag indicating if this group is a deck (1) or regular group (0)"
+        },
+        {
+          "name": "participants",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of contact IDs that are members of this group"
+        },
+        {
+          "name": "canvases",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of canvas IDs where this group appears"
+        },
+        {
+          "name": "tags",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of Tag UUIDs linked to this group"
+        },
+        {
+          "name": "child_group_ids",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of child group UUIDs maintained by services"
+        },
+        {
+          "name": "parent_group_ids",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of parent group UUIDs derived from child relationships"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_groups_id",
+          "columns": ["id"],
+          "type": "UNIQUE"
+        },
+        {
+          "name": "idx_groups_name",
+          "columns": ["name"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_groups_parent_id",
+          "columns": ["parent_id"],
+          "type": "INDEX"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "parent_id",
+          "references": {
+            "table": "groups",
+            "column": "id"
+          },
+          "on_delete": "SET NULL",
+          "on_update": "CASCADE"
+        }
+      ]
+    },
+    "canvases": {
+      "description": "Canvas definitions and layouts for visual relationship mapping",
+      "columns": [
+        {
+          "name": "canvas_id",
+          "type": "TEXT",
+          "constraints": ["PRIMARY KEY"],
+          "description": "UUID string identifier for the canvas"
+        },
+        {
+          "name": "canvas_name",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Display name of the canvas"
+        },
+        {
+          "name": "canvas_elements",
+          "type": "TEXT",
+          "constraints": ["NOT NULL", "DEFAULT '[]'"],
+          "description": "JSON array of canvas elements with properties: element_id, element_type, location, scale, width, height, rotation, color"
+        },
+        {
+          "name": "element_counts",
+          "type": "TEXT",
+          "constraints": ["NOT NULL", "DEFAULT '{}'"],
+          "description": "JSON object with element counts by type: {contacts: N, groups: N, decks: N, all: N}"
+        },
+        {
+          "name": "date_created",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "ISO 8601 timestamp of canvas creation"
+        },
+        {
+          "name": "date_updated",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "ISO 8601 timestamp of last canvas modification"
+        },
+        {
+          "name": "last_saved",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "ISO 8601 timestamp of last canvas save operation"
+        },
+        {
+          "name": "canvas_type",
+          "type": "TEXT",
+          "constraints": ["NOT NULL", "DEFAULT 'group_map'"],
+          "description": "Type of canvas: group_map, deck_map, contact_map, custom"
+        },
+        {
+          "name": "canvas_state",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '{}'"],
+          "description": "JSON object containing canvas view state (zoom, pan, grid settings, etc.)"
+        },
+        {
+          "name": "metadata",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '{}'"],
+          "description": "JSON object for additional canvas metadata and settings"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_canvases_id",
+          "columns": ["canvas_id"],
+          "type": "UNIQUE"
+        },
+        {
+          "name": "idx_canvases_name",
+          "columns": ["canvas_name"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_canvases_type",
+          "columns": ["canvas_type"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_canvases_created",
+          "columns": ["date_created"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_canvases_updated",
+          "columns": ["date_updated"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_canvases_type_updated",
+          "columns": ["canvas_type", "date_updated"],
+          "type": "INDEX"
+        }
+      ]
+    },
+    "invites": {
+      "description": "Invitations, actions, and to-do items sent or received by the user",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "constraints": ["PRIMARY KEY"],
+          "description": "UUID string identifier for the invite"
+        },
+        {
+          "name": "title",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Title or subject of the invitation/task"
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Detailed description of the invitation/task"
+        },
+        {
+          "name": "creation_date",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "ISO 8601 timestamp when the invite was created"
+        },
+        {
+          "name": "last_modified_date",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "ISO 8601 timestamp of last modification"
+        },
+        {
+          "name": "date_completed",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "ISO 8601 timestamp when the task was completed (null if not completed)"
+        },
+        {
+          "name": "completed",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Boolean flag indicating if the task is completed (1) or not (0)"
+        },
+        {
+          "name": "completion_status",
+          "type": "TEXT",
+          "constraints": ["DEFAULT 'pending'"],
+          "description": "Current status of the invitation/task (pending, in_progress, completed, cancelled, etc.)"
+        },
+        {
+          "name": "sent_received",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Direction of the invite: 'sent' or 'received'"
+        },
+        {
+          "name": "to_phone",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Phone number of the person the invite was sent to"
+        },
+        {
+          "name": "from_phone",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Phone number of the person the invite was sent from"
+        },
+        {
+          "name": "priority",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 1"],
+          "description": "Priority level (1=low, 2=medium, 3=high, 4=urgent, 5=critical)"
+        },
+        {
+          "name": "due_date",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "ISO 8601 timestamp of when the task is due"
+        },
+        {
+          "name": "parent_tasks",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of parent task UUIDs"
+        },
+        {
+          "name": "child_tasks",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of child task UUIDs"
+        },
+        {
+          "name": "tags",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '{}'"],
+          "description": "JSON object with categorized tags (e.g., {\"priority\": \"high\", \"category\": \"work\", \"custom\": [\"urgent\"]})"
+        },
+        {
+          "name": "groups",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of group objects with name and ID from groups table"
+        },
+        {
+          "name": "task_group",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '{}'"],
+          "description": "JSON object with task group information ({\"name\": \"taskgroupname\", \"id\": \"taskgroupID\"})"
+        },
+        {
+          "name": "ai_processed",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Boolean flag indicating if AI has analyzed this invite"
+        },
+        {
+          "name": "ai_suggestions",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '{}'"],
+          "description": "JSON object containing AI-generated suggestions or analysis"
+        },
+        {
+          "name": "ai_confidence",
+          "type": "REAL",
+          "constraints": ["DEFAULT 0.0"],
+          "description": "Confidence score for AI analysis (0.0 to 1.0)"
+        },
+        {
+          "name": "reminder_date",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "ISO 8601 timestamp for when to remind about this invite"
+        },
+        {
+          "name": "message_origin_guid",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "GUID of the message that originated this invite (foreign key to messages.guid)"
+        },
+        {
+          "name": "is_recurring",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Boolean flag indicating if this is a recurring task"
+        },
+        {
+          "name": "recurrence_type",
+          "type": "TEXT",
+          "constraints": ["DEFAULT 'none'"],
+          "description": "Type of recurrence: none, daily, weekly, monthly, monthly-by-week, yearly, yearly-by-month-week"
+        },
+        {
+          "name": "next_task_id",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "UUID of the next occurrence in a recurring series"
+        },
+        {
+          "name": "previous_task_id",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "UUID of the previous occurrence in a recurring series"
+        },
+        {
+          "name": "is_next_task",
+          "type": "INTEGER",
+          "constraints": ["DEFAULT 0"],
+          "description": "Boolean flag indicating if this is the next task in a recurring series"
+        },
+        {
+          "name": "date_of_last_task",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "ISO 8601 timestamp of when the last occurrence of this recurring task was completed"
+        },
+        {
+          "name": "created_by",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Phone number or identifier of who created this invite"
+        },
+        {
+          "name": "assigned_to",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Phone number or identifier of who is responsible for this invite"
+        },
+        {
+          "name": "category",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Type of invite (meeting, task, event, reminder, etc.)"
+        },
+        {
+          "name": "location",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Physical or virtual location where the invite takes place"
+        },
+        {
+          "name": "estimated_duration",
+          "type": "INTEGER",
+          "constraints": [],
+          "description": "Estimated duration in minutes"
+        },
+        {
+          "name": "attachments",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of file references or URLs"
+        },
+        {
+          "name": "external_id",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Reference to external calendar/task system IDs"
+        },
+        {
+          "name": "last_ai_analysis",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "ISO 8601 timestamp of last AI processing"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_invites_id",
+          "columns": ["id"],
+          "type": "UNIQUE"
+        },
+        {
+          "name": "idx_invites_to_phone",
+          "columns": ["to_phone"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_invites_from_phone",
+          "columns": ["from_phone"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_invites_creation_date",
+          "columns": ["creation_date"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_invites_due_date",
+          "columns": ["due_date"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_invites_completed",
+          "columns": ["completed"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_invites_priority",
+          "columns": ["priority"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_invites_sent_received",
+          "columns": ["sent_received"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_invites_message_origin",
+          "columns": ["message_origin_guid"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_invites_recurring",
+          "columns": ["is_recurring"],
+          "type": "INDEX"
+        },
+        {
+          "name": "idx_invites_next_task",
+          "columns": ["is_next_task"],
+          "type": "INDEX"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "column": "to_phone",
+          "references": {
+            "table": "contacts",
+            "column": "phone"
+          },
+          "on_delete": "SET NULL",
+          "on_update": "CASCADE"
+        },
+        {
+          "column": "from_phone",
+          "references": {
+            "table": "contacts",
+            "column": "phone"
+          },
+          "on_delete": "SET NULL",
+          "on_update": "CASCADE"
+        },
+        {
+          "column": "message_origin_guid",
+          "references": {
+            "table": "messages",
+            "column": "guid"
+          },
+          "on_delete": "SET NULL",
+          "on_update": "CASCADE"
+        },
+        {
+          "column": "next_task_id",
+          "references": {
+            "table": "invites",
+            "column": "id"
+          },
+          "on_delete": "SET NULL",
+          "on_update": "CASCADE"
+        },
+        {
+          "column": "previous_task_id",
+          "references": {
+            "table": "invites",
+            "column": "id"
+          },
+          "on_delete": "SET NULL",
+          "on_update": "CASCADE"
+        }
+      ]
+    },
+    "tags": {
+      "description": "Tag definitions for categorizing contacts and groups",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTOINCREMENT"],
+          "description": "Internal identifier for the tag"
+        },
+        {
+          "name": "uuid",
+          "type": "TEXT",
+          "constraints": ["UNIQUE", "NOT NULL"],
+          "description": "Stable UUID used for referencing the tag"
+        },
+        {
+          "name": "name",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Display name of the tag"
+        },
+        {
+          "name": "color",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Hex color string used when displaying tag smart chips"
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "User-provided description of the tag"
+        },
+        {
+          "name": "linked_contacts",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of contact row IDs (contacts.id) currently bound to this tag"
+        },
+        {
+          "name": "linked_groups",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of group UUIDs currently bound to this tag"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_tags_uuid",
+          "columns": ["uuid"],
+          "type": "UNIQUE"
+        },
+        {
+          "name": "idx_tags_name",
+          "columns": ["name"],
+          "type": "INDEX"
+        }
+      ]
+    },
+    "relationships": {
+      "description": "Relationship definitions describing how contacts and groups are connected",
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "constraints": ["PRIMARY KEY", "AUTOINCREMENT"],
+          "description": "Internal identifier for the relationship type"
+        },
+        {
+          "name": "uuid",
+          "type": "TEXT",
+          "constraints": ["UNIQUE", "NOT NULL"],
+          "description": "Stable UUID used for referencing the relationship"
+        },
+        {
+          "name": "name",
+          "type": "TEXT",
+          "constraints": ["NOT NULL"],
+          "description": "Display name of the relationship"
+        },
+        {
+          "name": "color",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "Hex color string used for rendering relationship smart chips"
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "constraints": [],
+          "description": "User-provided description of the relationship"
+        },
+        {
+          "name": "linked_contacts",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of contact row IDs (contacts.id) associated with this relationship"
+        },
+        {
+          "name": "linked_groups",
+          "type": "TEXT",
+          "constraints": ["DEFAULT '[]'"],
+          "description": "JSON array of group UUIDs associated with this relationship"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_relationships_uuid",
+          "columns": ["uuid"],
+          "type": "UNIQUE"
+        },
+        {
+          "name": "idx_relationships_name",
+          "columns": ["name"],
+          "type": "INDEX"
+        }
+      ]
+    }
+  },
+  "views": {
+    "contact_message_summary": {
+      "description": "Aggregated view of contact message statistics",
+      "sql": "SELECT c.id, c.phone, c.name, c.first_name, c.last_name, c.business, COUNT(m.guid) as total_messages, SUM(CASE WHEN m.is_from_me = 1 THEN 1 ELSE 0 END) as messages_sent, SUM(CASE WHEN m.is_from_me = 0 THEN 1 ELSE 0 END) as messages_received, MAX(m.timestamp) as last_message_timestamp FROM contacts c LEFT JOIN messages m ON c.phone = m.phone_number GROUP BY c.id, c.phone, c.name"
+    },
+    "group_members": {
+      "description": "View showing group membership with contact details",
+      "sql": "SELECT g.id as group_id, g.name as group_name, c.id as contact_id, c.phone, c.name as contact_name, c.business FROM groups g JOIN json_each(g.member_phones) as phones ON phones.value = c.phone JOIN contacts c ON c.phone = phones.value"
+    },
+    "recent_messages": {
+      "description": "View of recent messages with contact information",
+      "sql": "SELECT m.guid, m.body, m.timestamp, m.is_from_me, c.name as contact_name, c.phone, c.business FROM messages m LEFT JOIN contacts c ON m.contact_id = c.id ORDER BY m.timestamp DESC LIMIT 100"
+    },
+    "invite_summary": {
+      "description": "View of invites with contact information and completion status",
+      "sql": "SELECT i.id, i.title, i.description, i.creation_date, i.due_date, i.completed, i.completion_status, i.priority, i.sent_received, i.to_phone, i.from_phone, c_to.name as to_contact_name, c_from.name as from_contact_name FROM invites i LEFT JOIN contacts c_to ON i.to_phone = c_to.phone LEFT JOIN contacts c_from ON i.from_phone = c_from.phone"
+    },
+    "pending_invites": {
+      "description": "View of all pending invites ordered by priority and due date",
+      "sql": "SELECT i.*, c_to.name as to_contact_name, c_from.name as from_contact_name FROM invites i LEFT JOIN contacts c_to ON i.to_phone = c_to.phone LEFT JOIN contacts c_from ON i.from_phone = c_from.phone WHERE i.completed = 0 ORDER BY i.priority DESC, i.due_date ASC"
+    },
+    "recurring_invites": {
+      "description": "View of recurring invites with their next occurrence information",
+      "sql": "SELECT i.*, c_to.name as to_contact_name, c_from.name as from_contact_name FROM invites i LEFT JOIN contacts c_to ON i.to_phone = c_to.phone LEFT JOIN contacts c_from ON i.from_phone = c_from.phone WHERE i.is_recurring = 1 ORDER BY i.recurrence_type, i.creation_date"
+    }
+  },
+  "triggers": {
+    "update_contact_message_stats": {
+      "description": "Automatically update contact message statistics when messages are inserted/updated",
+      "events": ["INSERT", "UPDATE"],
+      "table": "messages",
+      "sql": "UPDATE contacts SET total_messages = (SELECT COUNT(*) FROM messages WHERE contact_id = NEW.contact_id), messages_sent = (SELECT COUNT(*) FROM messages WHERE contact_id = NEW.contact_id AND is_from_me = 1), messages_received = (SELECT COUNT(*) FROM messages WHERE contact_id = NEW.contact_id AND is_from_me = 0), last_message_date = datetime(NEW.timestamp, 'unixepoch') WHERE id = NEW.contact_id"
+    },
+    "update_group_member_count": {
+      "description": "Update group metadata when members are added/removed",
+      "events": ["UPDATE"],
+      "table": "groups",
+      "sql": "UPDATE groups SET metadata = json_set(metadata, '$.member_count', json_array_length(member_phones)) WHERE id = NEW.id"
+    },
+    "update_invite_completion": {
+      "description": "Automatically set completion date when invite is marked as completed",
+      "events": ["UPDATE"],
+      "table": "invites",
+      "sql": "UPDATE invites SET date_completed = CASE WHEN NEW.completed = 1 AND OLD.completed = 0 THEN datetime('now') ELSE NEW.date_completed END, last_modified_date = datetime('now') WHERE id = NEW.id"
+    },
+    "update_invite_modified_date": {
+      "description": "Automatically update last_modified_date on any invite update",
+      "events": ["UPDATE"],
+      "table": "invites",
+      "sql": "UPDATE invites SET last_modified_date = datetime('now') WHERE id = NEW.id"
+    }
+  },
+  "constraints": {
+    "data_integrity": [
+      "Phone numbers must be unique across all contacts",
+      "Message GUIDs must be unique across all messages",
+      "Group IDs must be valid UUIDs",
+      "Canvas node positions must be within reasonable bounds",
+      "Contact references in messages must exist in contacts table",
+      "Invite IDs must be valid UUIDs",
+      "Invite phone number references must exist in contacts table",
+      "Message origin GUIDs must exist in messages table",
+      "Recurring task references must be valid invite UUIDs"
+    ],
+    "business_rules": [
+      "Primary user contacts should have is_primary_user = 1",
+      "Message timestamps should be in Unix epoch format",
+      "Group member phones must reference valid contact phone numbers",
+      "Canvas nodes must reference valid contact phone numbers",
+      "Invite completion status should be consistent with completed boolean",
+      "Recurring tasks should have valid recurrence_type values",
+      "Priority levels should be between 1 and 5",
+      "AI confidence scores should be between 0.0 and 1.0",
+      "Sent/received field must be either 'sent' or 'received'"
+    ]
+  },
+  "migration_notes": [
+    "The contacts table includes legacy contact_group field for backward compatibility",
+    "Profile photos are stored as BLOB data for performance",
+    "JSON fields are used for flexible metadata storage in groups and canvas data",
+    "Message timestamps are stored as integers for efficient querying",
+    "Foreign key relationships use phone numbers as business keys for contacts",
+    "Invites table uses UUIDs for primary keys to support distributed systems",
+    "Recurring tasks use self-referencing foreign keys for task chains",
+    "AI analysis data is stored as JSON for flexible schema evolution",
+    "Task hierarchies are stored as JSON arrays for efficient querying"
+  ],
+  "performance_considerations": [
+    "Indexes are created on frequently queried columns",
+    "Message history uses efficient timestamp-based queries",
+    "Contact lookups are optimized with phone number indexing",
+    "Canvas data uses JSON for flexible storage of complex structures",
+    "Profile photos are stored as BLOB for fast retrieval",
+    "Invites are indexed by priority, due date, and completion status for efficient filtering",
+    "Recurring task queries are optimized with dedicated indexes",
+    "AI analysis results are cached to avoid repeated processing",
+    "Task hierarchies use JSON for flexible parent-child relationships"
+  ],
+  "backup_recommendations": [
+    "Regular SQLite database backups should be performed",
+    "Profile photos should be backed up separately if large",
+    "Canvas state should be exported to JSON for portability",
+    "Message history should be archived periodically for performance",
+    "Invites data should be backed up with full JSON field integrity",
+    "AI analysis results should be preserved in backups for continuity",
+    "Recurring task chains should be validated after restore operations"
+  ]
+}

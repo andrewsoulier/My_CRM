@@ -1,0 +1,10 @@
+# My CRM Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core dependencies
+requests>=2.31.0
+keyring>=24.2.0
+
+# Optional dependencies for enhanced functionality
+# openai>=1.0.0  # Uncomment when ready to use OpenAI Python SDK
+# python-dotenv>=1.0.0  # For environment variable management

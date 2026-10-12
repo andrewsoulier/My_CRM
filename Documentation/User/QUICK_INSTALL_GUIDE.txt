@@ -1,0 +1,119 @@
+═══════════════════════════════════════════════════
+    MY CRM - QUICK INSTALLATION GUIDE
+═══════════════════════════════════════════════════
+
+INSTALLATION (3 STEPS - 30 SECONDS)
+───────────────────────────────────────────────────
+
+1. OPEN THE DMG
+   • Double-click "My CRM Installer.dmg"
+
+2. DRAG TO APPLICATIONS
+   • Drag "My CRM.app" to the Applications folder
+
+3. REMOVE QUARANTINE
+   • Double-click "Remove Quarantine.command"
+   • Click "Open" when prompted
+   • Wait for "Done!" message
+
+DONE! Launch My CRM from:
+   • Applications folder
+   • Spotlight (⌘+Space, type "My CRM")
+
+═══════════════════════════════════════════════════
+
+TROUBLESHOOTING
+───────────────────────────────────────────────────
+
+❌ "The app can't be opened"
+   → Run "Remove Quarantine.command" in the DMG
+
+   OR right-click My CRM.app → Open → Open
+
+   OR in Terminal:
+   xattr -cr "/Applications/My CRM.app"
+
+❌ "No contacts appear"
+   → Import contacts from macOS Contacts app
+
+❌ "Can't access Messages"
+   → Grant Full Disk Access:
+     System Settings → Privacy & Security
+     → Full Disk Access → Add My CRM
+
+═══════════════════════════════════════════════════
+
+SYSTEM REQUIREMENTS
+───────────────────────────────────────────────────
+
+• macOS 14.0 or later
+• ~10 MB disk space
+• No other dependencies!
+
+═══════════════════════════════════════════════════
+
+PRIVACY & DATA
+───────────────────────────────────────────────────
+
+All data stays on YOUR Mac.
+No internet connection required (except AI features).
+No telemetry or tracking.
+
+The app accesses:
+• macOS Contacts (if you import contacts)
+• iMessage database (only with Full Disk Access)
+• Files you explicitly select
+
+═══════════════════════════════════════════════════
+
+FIRST TIME SETUP
+───────────────────────────────────────────────────
+
+On first launch, My CRM automatically:
+• Creates database at ~/Documents/MY_CRM/
+• Creates settings folder
+• Sets up all necessary files
+
+No configuration needed - just launch and use!
+
+═══════════════════════════════════════════════════
+
+FEATURES
+───────────────────────────────────────────────────
+
+✓ Visual contact organization
+✓ Drag-and-drop interface
+✓ Relationship maps and groups
+✓ iMessage integration (optional)
+✓ Smart search
+✓ Keyboard shortcuts
+
+═══════════════════════════════════════════════════
+
+KEYBOARD SHORTCUTS
+───────────────────────────────────────────────────
+
+W              Toggle navigation bar
+↑/↓            Navigate contacts
+Shift+Click    Select range
+⌘+Click        Toggle selection
+⌘+F            Search
+⌘+A            Select all
+Esc            Clear selection
+
+═══════════════════════════════════════════════════
+
+HELP & DOCUMENTATION
+───────────────────────────────────────────────────
+
+• GETTING_STARTED.md - Complete user guide
+• README.txt - Basic instructions
+• In-app help - Check the menu bar
+
+═══════════════════════════════════════════════════
+
+Enjoy organizing your relationships!
+
+My CRM v1.0.0
+═══════════════════════════════════════════════════
+

@@ -1,0 +1,20 @@
+{
+  "database": {
+    "path": "",
+    "name": ""
+  },
+  "user": {
+    "name": "",
+    "phone": "",
+    "email": "",
+    "nickname": ""
+  },
+  "preferences": {
+    "theme": "light",
+    "notifications": true,
+    "auto_sync": true,
+    "log_level": "info",
+    "run_at_login": false
+
+  }
+}

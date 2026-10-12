@@ -1,0 +1,510 @@
+{
+  "project_name": "My CRM",
+  "version": "1.0.0",
+  "mapping_date": "2024-12-19",
+  "current_structure": {
+    "App": {
+      "MyCRMApp.swift": {
+        "classes": ["AppModel"],
+        "properties": [
+          "isBackendConnected", "dbURL", "isRunning", "lastUpdate", "isMainWindowOpen",
+          "process", "outputPipe", "errorPipe", "timer", "updateTimer", "dataCheckTimer"
+        ],
+        "methods": [
+          "startBackend", "stopBackend", "loadLastRunTime", "saveLastRunTime",
+          "startUpdateTimer", "stopUpdateTimer", "updateLastMessageTime", "runStartScript"
+        ]
+      },
+      "PreferencesView.swift": {
+        "structs": ["PreferencesView"],
+        "properties": [
+          "databasePath", "databaseName", "userName", "userPhone", "userEmail",
+          "theme", "notifications", "autoSync", "runAtLogin", "showingFilePicker",
+          "showingContactPicker", "showingSaveAlert", "saveMessage"
+        ],
+        "methods": ["selectDatabaseFile", "selectContact", "savePreferences"]
+      },
+      "CRMApp.swift": {
+        "structs": ["CRMApp"],
+        "properties": ["appModel"]
+      },
+      "Info.plist": {
+        "type": "configuration_file"
+      }
+    },
+    "Documentation": {
+      "files": [
+        "README.md"
+      ],
+      "Architecture": {
+        "files": [
+          "DATABASE_CENTRIC_ARCHITECTURE.md",
+          "NAVIGATION_STRUCTURE.md"
+        ]
+      },
+      "Build": {
+        "files": [
+          "AUTOMATED_DMG_DISTRIBUTION.md",
+          "BUILD_AND_DISTRIBUTE.md",
+          "CODE_SIGNING_FIX.md",
+          "DISTRIBUTION_GUIDE.md",
+          "DISTRIBUTION_QUICK_START.txt",
+          "DMG_DISTRIBUTION_COMPLETE.md",
+          "DMG_USAGE.md"
+        ]
+      },
+      "Database": {
+        "files": [
+          "DATABASE_AND_PERMISSION_FIXES_SUMMARY.md",
+          "DATABASE_FIRST_IMPLEMENTATION_GUIDE.md",
+          "DATABASE_INITIALIZATION_FIX_SUMMARY.md",
+          "DATABASE_IO_ERROR_FIXES.md",
+          "DATABASE_PATH_MANAGEMENT.md",
+          "DATABASE_PATHWAYS_DIAGRAM.md",
+          "DATABASE_REPAIR_AND_INTEGRITY.md",
+          "GRDB_BEST_PRACTICES.md",
+          "GRDB_IMPLEMENTATION_STATUS.md",
+          "GRDB_MIGRATION_GUIDE.md",
+          "SQL_VALIDATION_USAGE_GUIDE.md",
+          "database_requirements.json"
+        ]
+      },
+      "Development": {
+        "files": [
+          "APP_CLEANUP_IMPLEMENTATION_SUMMARY.md",
+          "CLEANUP_GUIDE.md",
+          "IMPLEMENTATION_COMPLETE.md",
+          "PROPOSED_FILE_STRUCTURE.md",
+          "REFACTORING_PLAN.md",
+          "SWIFT_MIGRATION_COMPLETE.md",
+          "deprecated_code.md"
+        ]
+      },
+      "Features": {
+        "Canvas": {
+          "files": [
+            "CANVAS_CONTROLS_IMPLEMENTATION.md",
+            "CANVAS_DATABASE_IMPLEMENTATION.md",
+            "CANVAS_HIERARCHY_STRUCTURE.md",
+            "CANVAS_KEYBOARD_DELETE.md",
+            "CANVAS_UI_IMPLEMENTATION.md",
+            "CONTACT_TO_CANVAS_INTEGRATION.md",
+            "UI_DATABASE_SYNC_IMPLEMENTATION.md"
+          ]
+        },
+        "Chips": {
+          "files": [
+            "CHIP_DROPDOWN_FIX.md",
+            "CHIP_KEYBOARD_NAVIGATION_SUMMARY.md",
+            "CHIP_SYSTEM_IMPLEMENTATION.md"
+          ]
+        },
+        "Contacts": {
+          "files": [
+            "CONTACT_IMPORT_FINAL_FIX.md",
+            "CONTACT_IMPORT_FIX_SUMMARY.md",
+            "CONTACTS_BAR_SELECTION_FEATURES.md",
+            "INVITES_IMPLEMENTATION.md",
+            "PHONE_NORMALIZATION_AND_PHOTOS_FIX.md",
+            "PROFILE_PHOTO_FIX_SUMMARY.md",
+            "VCARD_FORMAT_SPECIFICATION.md"
+          ]
+        },
+        "Groups": {
+          "files": [
+            "GROUP_MANAGEMENT_IMPROVEMENTS.md",
+            "GROUP_PARTICIPANT_FIX_SUMMARY.md",
+            "GROUPS_TOOLBAR_IMPLEMENTATION.md"
+          ]
+        },
+        "Integrations": {
+          "files": [
+            "AI_INTEGRATION_GUIDE.md"
+          ]
+        },
+        "Messaging": {
+          "files": [
+            "BATCH_MESSAGING_AUTHORIZATION_GUIDE.md",
+            "LAST_MESSAGE_TIMESTAMP_UPDATE.md",
+            "QUICK_SEND_IMPLEMENTATION.md",
+            "ROBUST_BATCH_MESSAGING_IMPLEMENTATION_SUMMARY.md",
+            "SCHEDULED_MESSAGE_SAFETY.md",
+            "SCHEDULED_MESSAGE_UUID_FIX_SUMMARY.md",
+            "SCHEDULED_MESSAGE_VERIFICATION_SUMMARY.md"
+          ]
+        },
+        "Settings": {
+          "files": [
+            "SETTINGS_SYSTEM.md",
+            "USER_SETTINGS_CONSOLIDATION_SUMMARY.md"
+          ]
+        }
+      },
+      "Meta": {
+        "files": [
+          "CURSOR_AI_RULES.md",
+          "FileMap.txt",
+          "filestructure.json"
+        ]
+      },
+      "Notes": {
+        "files": [
+          "Working Notes.txt"
+        ]
+      },
+      "Operations": {
+        "files": [
+          "FULL_DISK_ACCESS_AUTOMATION.md",
+          "PERMISSION_CHECK_IMPROVEMENTS.md",
+          "REMOTE_DATABASE_FIXES_SUMMARY.md",
+          "SSH_SETUP_GUIDE.md"
+        ]
+      },
+      "Requirements": {
+        "files": [
+          "FeatureRequirements.txt"
+        ]
+      },
+      "Testing": {
+        "files": [
+          "AUTOMATED_TESTING_IMPLEMENTATION.md",
+          "GRDB_VALIDATION_TEST.md",
+          "PORTABILITY_VERIFICATION.md",
+          "TESTING_WORKFLOW_GUIDE.md"
+        ]
+      },
+      "User": {
+        "files": [
+          "GETTING_STARTED.md",
+          "QUICK_INSTALL_GUIDE.txt"
+        ]
+      }
+    },
+    "Core": {
+      "Models": {
+        "Contact.swift": {
+          "structs": ["Contact"],
+          "properties": [
+            "id", "phone", "name", "firstName", "lastName", "email", "address",
+            "notes", "creationDate", "business", "contactGroup", "birthday", "appleContactID"
+          ],
+          "computed_properties": ["displayName", "initials"],
+          "methods": ["init(from sqliteRow:)", "init(phone:name:...)", "hash(into:)", "=="]
+        },
+        "Group.swift": {
+          "structs": ["ContactGroup", "GroupMetadata"],
+          "properties": [
+            "id", "name", "color", "createdAt", "parentID", "memberPhones",
+            "linkedGroupIDs", "metadata", "inviteCount", "interconnectivityScore"
+          ],
+          "computed_properties": ["members", "memberCount", "isRoot", "hasChildren"],
+          "methods": ["init(id:name:color:parentID:)"]
+        },
+        "Deck.swift": {
+          "structs": ["Deck"],
+          "properties": [
+            "id", "name", "memberPhones", "createdAt", "updatedAt", "description"
+          ],
+          "computed_properties": ["members", "memberCount", "isEmpty"],
+          "methods": [
+            "init(id:name:description:)", "addMember", "removeMember",
+            "reorderMembers", "containsMember"
+          ]
+        },
+        "CanvasModels.swift": {
+          "structs": [
+            "ContactNode", "GroupCircle", "CanvasState", "DragContext", "CanvasTransform"
+          ],
+          "enums": ["DragType", "GroupOperation"],
+          "properties": [
+            "id", "name", "avatarURL", "position", "size", "isSelected", "tags",
+            "center", "radius", "color", "members", "zoom", "pan", "gridEnabled"
+          ],
+          "methods": [
+            "canvasToView", "viewToCanvas", "distance(to:)", "snappedToGrid",
+            "updateGroup"
+          ]
+        }
+      },
+      "Protocols": {
+        "DataProvider.swift": {
+          "protocols": ["DataProvider", "ImageProvider", "Persistence"],
+          "structs": ["ContactFilter"],
+          "enums": ["ContactSortOption", "DataProviderError"],
+          "methods": [
+            "fetchContacts", "countContacts", "fetchContact", "updateContact",
+            "deleteContact", "fetchGroups", "createGroup", "updateGroup",
+            "deleteGroup", "add(phones:to:)", "move(phones:from:to:)",
+            "remove(phones:from:)", "getGroupMembers", "updateGroupMembers"
+          ]
+        }
+      },
+      "Services": {
+        "CanvasRepository.swift": {
+          "protocols": ["CanvasRepository"],
+          "classes": ["InMemoryCanvasRepository", "FileCanvasRepository"],
+          "methods": ["load", "save"]
+        },
+        "DragDropManager.swift": {
+          "classes": ["DragDropManager"],
+          "properties": ["shared"],
+          "methods": [
+            "makeItems", "transferable", "decodeProviders", "performDrop",
+            "handleGroupDrop", "handleDeckDrop", "addContactsToGroup",
+            "moveContactsBetweenGroups", "addContactsToDeck", "reorderContactsInDeck",
+            "moveContactsBetweenDecks"
+          ]
+        },
+        "FuzzyMatcher.swift": {
+          "classes": ["FuzzyMatcher"],
+          "methods": ["match", "calculateScore"]
+        },
+        "HotkeyManager.swift": {
+          "classes": ["HotkeyManager"],
+          "methods": ["register", "unregister", "handleKeyPress"]
+        },
+        "SelectionManager.swift": {
+          "classes": ["SelectionManager"],
+          "properties": ["selectedItems"],
+          "methods": ["select", "deselect", "clear", "toggle"]
+        }
+      },
+      "DragDrop": {
+        "ContactTransferable.swift": {
+          "structs": ["ContactTransferable", "ContactDragItem"],
+          "enums": ["DragOrigin"],
+          "methods": ["init", "encode", "decode"]
+        },
+        "DragTypes.swift": {
+          "enums": ["DragType", "DropTarget"]
+        },
+        "ProviderBridge.swift": {
+          "structs": ["ProviderBridge"],
+          "methods": ["encode", "decode"]
+        }
+      },
+      "Mock": {
+        "MockDataProvider.swift": {
+          "classes": ["MockDataProvider"],
+          "properties": ["contacts", "groups", "decks", "database", "isConnectedToSQLite"],
+          "methods": [
+            "connectToDatabase", "isConnected", "closeConnection", "loadContactsFromSQLite",
+            "loadMockData", "generateMockContacts", "generateMockGroups", "generateMockDecks",
+            "fetchContacts", "countContacts", "fetchContact", "getContact", "updateContact",
+            "deleteContact", "fetchGroups", "createGroup", "updateGroup", "deleteGroup",
+            "add(phones:to:)", "move(phones:from:to:)", "remove(phones:from:)",
+            "getGroupMembers", "updateGroupMembers", "fetchDecks", "createDeck",
+            "updateDeck", "deleteDeck", "getDeckMembers", "updateDeckMembers"
+          ]
+        }
+      }
+    },
+    "UI": {
+      "Components": {
+        "ContactNodeView.swift": {
+          "structs": ["ContactNodeView"],
+          "properties": ["contact", "isSelected", "position", "size"],
+          "methods": ["body"]
+        },
+        "DragPreview.swift": {
+          "structs": ["DragPreview"],
+          "properties": ["phones", "origin"],
+          "methods": ["body"]
+        },
+        "GroupCircleView.swift": {
+          "structs": ["GroupCircleView"],
+          "properties": ["group", "isSelected", "center", "radius"],
+          "methods": ["body"]
+        }
+      },
+      "Pages": {
+        "PeopleMaps": {
+          "CanvasGestures.swift": {
+            "structs": ["CanvasGestures"],
+            "methods": ["handleTap", "handleDrag", "handlePinch"]
+          },
+          "CanvasOverlay.swift": {
+            "structs": ["CanvasOverlay"],
+            "properties": ["zoom", "pan", "gridEnabled"],
+            "methods": ["body"]
+          },
+          "GroupsMapCanvas.swift": {
+            "structs": ["GroupsMapCanvas"],
+            "properties": ["nodes", "groups", "state"],
+            "methods": ["body", "handleGesture", "updateState"]
+          },
+          "GroupsMapViewModel.swift": {
+            "classes": ["GroupsMapViewModel"],
+            "properties": ["nodes", "groups", "state"],
+            "methods": ["loadData", "saveData", "updateNode", "updateGroup"]
+          },
+          "SandboxView.swift": {
+            "structs": ["SandboxView"],
+            "methods": ["body"]
+          }
+        },
+        "DeckBuilder": {
+          "DeckBuilderView.swift": {
+            "structs": ["DeckBuilderView", "DeckStackView", "ContactCardView"],
+            "properties": [
+              "decks", "deckPositions", "isPanning", "appState", "dataProvider",
+              "dragDropManager", "selectionManager"
+            ],
+            "methods": [
+              "body", "loadDecks", "setupInitialPositions", "handleCanvasDrag",
+              "createNewDeck", "handleDeckTap", "handleContactTap"
+            ]
+          }
+        }
+      },
+      "Shell": {
+        "ContactsBarView.swift": {
+          "structs": ["ContactsBarView"],
+          "properties": ["contacts", "searchTerm", "selectedContacts"],
+          "methods": ["body", "filterContacts", "selectContact"]
+        },
+        "ContentView.swift": {
+          "structs": ["ContentView"],
+          "properties": ["appModel"],
+          "methods": ["body"]
+        },
+        "MainCRMView.swift": {
+          "structs": ["MainCRMView"],
+          "properties": ["appState", "dataProvider"],
+          "methods": ["body"]
+        },
+        "PageNavBarView.swift": {
+          "structs": ["PageNavBarView"],
+          "properties": ["selectedPage", "pages"],
+          "methods": ["body", "selectPage"]
+        },
+        "WorkspaceView.swift": {
+          "structs": ["WorkspaceView"],
+          "properties": ["appState", "dataProvider"],
+          "methods": ["body", "handleNavigation"]
+        }
+      },
+      "Shared": {
+        "AutoscrollController.swift": {
+          "classes": ["AutoscrollController"],
+          "properties": ["scrollView", "timer"],
+          "methods": ["startAutoscroll", "stopAutoscroll", "updateScroll"]
+        }
+      },
+      "Modals": {
+        "SettingsView.swift": {
+          "structs": ["SettingsView"],
+          "properties": ["isPresented", "settings"],
+          "methods": ["body", "saveSettings"]
+        }
+      }
+    },
+    "State": {
+      "AppState.swift": {
+        "classes": ["AppState"],
+        "enums": ["Page"],
+        "properties": [
+          "selectedPage", "isPageNavBarVisible", "isContactsBarVisible",
+          "searchTerm", "sortOption", "selectedContacts", "selectedGroup",
+          "selectedDeck", "canvasZoom", "canvasOffset", "isGridSnappingEnabled",
+          "expandedFolders", "showingSettings", "showingGroupEditor",
+          "showingDeckEditor", "lastError", "showingError", "userDefaults"
+        ],
+        "methods": [
+          "selectPage", "togglePageNavBar", "toggleContactsBar", "collapseAllSiblings",
+          "expandAllSiblings", "selectContact", "deselectContact", "selectContacts",
+          "clearSelection", "toggleContactSelection", "setZoom", "resetZoom",
+          "toggleGridSnapping", "showError", "clearError", "savePersistedState",
+          "loadPersistedState"
+        ]
+      }
+    },
+    "Features": {
+      "ContentView.swift": {
+        "structs": ["ContentView"],
+        "properties": ["appModel"],
+        "methods": ["body"]
+      }
+    },
+    "Settings": {
+      "AppSettingsView.swift": {
+        "structs": ["AppSettingsView"],
+        "properties": ["appModel"],
+        "methods": ["body", "pickDB"]
+      }
+    },
+    "Tests": {
+      "DragDropTests.swift": {
+        "classes": ["DragDropTests"],
+        "methods": ["testDragCreation", "testDropHandling"]
+      },
+      "FuzzyMatcherTests.swift": {
+        "classes": ["FuzzyMatcherTests"],
+        "methods": ["testMatching", "testScoring"]
+      }
+    },
+    "Backend": {
+      "Feature Groups": {
+        "iMessage Server Scraper": {
+          "Resources": {
+            "import_contacts.py": {
+              "functions": [
+                "fetch_mac_contacts", "ensure_profile_photo_column",
+                "get_contact_photo_data", "update_crm_database"
+              ]
+            },
+            "import_imessages.py": {
+              "functions": [
+                "apple_epoch_to_dt", "_normalize_message", "main"
+              ]
+            },
+            "start.py": {
+              "functions": [
+                "main", "setup_logging", "ensure_venv", "pip_install_if_needed",
+                "reexec_inside_venv", "prompt_for_full_disk_access",
+                "preflight_messages_access", "run_ordered_scripts"
+              ]
+            },
+            "Modules": {
+              "imessage_tools.py": {
+                "functions": [
+                  "get_chat_mapping", "read_messages", "send_message"
+                ]
+              }
+            }
+          },
+          "MacOS": {
+            "Launch_Server.sh": {
+              "type": "shell_script"
+            },
+            "install_cron.sh": {
+              "type": "shell_script"
+            },
+            "uninstall_cron.sh": {
+              "type": "shell_script"
+            }
+          }
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "swift_packages": [
+      "SwiftUI", "AppKit", "Combine", "SQLite3", "Foundation"
+    ],
+    "python_packages": [
+      "sqlite3", "json", "datetime", "base64", "Contacts", "objc"
+    ]
+  },
+  "build_files": {
+    "Package.swift": {
+      "type": "swift_package_manifest"
+    },
+    "build_app.sh": {
+      "type": "build_script"
+    },
+    "My CRM.xcodeproj": {
+      "type": "xcode_project"
+    }
+  }
+}

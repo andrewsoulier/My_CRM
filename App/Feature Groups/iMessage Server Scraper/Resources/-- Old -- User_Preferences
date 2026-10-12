@@ -1,0 +1,21 @@
+{
+  "database": {
+    "path": "/Users/andrewsoulier/My_CRM Project/my_crm.db",
+    "name": "my_crm.db"
+  },
+  "user": {
+    "name": "Andrew Soulier",
+    "phone": "+1 970-988-2641",
+    "email": "andrew.w.soulier@gmail.com"
+  },
+  "preferences": {
+    "theme": "light",
+    "notifications": true,
+    "auto_sync": true,
+    "log_level": "info",
+    "run_at_login": true
+  },
+  "developer": {
+    "debug_points": true
+  }
+}
